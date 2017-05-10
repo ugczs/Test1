@@ -116,4 +116,18 @@ public class MailParser {
 		
 	}
 	
+	public String combineParts() {
+		try{
+			String s  = "";
+			String s1 = header.getHeaderContent();
+			String s2 = body.printBody();
+			s = s1 + "\n\n" + s2;
+			return s;
+		}
+		catch(Exception e) {
+			System.out.println("No Header or Body!");
+		}
+		return null;
+	}
+	
 }

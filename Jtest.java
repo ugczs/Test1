@@ -99,6 +99,23 @@ public class Jtest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}	
+	}
+	
+	@Test
+	public void testCombine() {
+		try {
+			MailReader mr = new MailReader("test4.txt");
+			String s = mr.getMail();
+			MailParser mp = new MailParser(mr);
+			mp.splitMail(mr);
+			mp.setHeader();
+			mp.setBody();
+			String s2 = mp.combineParts();
+			assertEquals(s, s2);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }
