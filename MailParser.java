@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Diese Utility Klasse Parst einem die Strings, die über MailReader eingelesen werden
@@ -32,14 +33,24 @@ public class MailParser {
 	/**
 	 * Header von Email wird gesetzt
 	 */
+//	public void setHeader() {
+//		try {
+//			String s = this.mailParts[0];
+//			String from = returnTag(s, "From");
+//			String to = returnTag(s, "To");
+//			String date = returnTag(s, "Date");
+//			String type = returnTag(s, "Content-Type");
+//			this.header = new Header (from, to, date, type);
+//		} 
+//		catch (Exception e) {
+//			System.out.println("Not an Email!");
+//		}
+//	}
+	
 	public void setHeader() {
 		try {
 			String s = this.mailParts[0];
-			String from = returnTag(s, "From");
-			String to = returnTag(s, "To");
-			String date = returnTag(s, "Date");
-			String type = returnTag(s, "Content-Type");
-			this.header = new Header (from, to, date, type);
+			this.header = new Header (s);
 		} 
 		catch (Exception e) {
 			System.out.println("Not an Email!");
@@ -89,8 +100,15 @@ public class MailParser {
 		try {
 			String s = this.mailParts[1];
 			String boundary = this.header.getBoundaryLine();
-			ArrayList<String> bodyParts = new ArrayList<>(Arrays.asList(s.split("(?="+boundary+")")));
-			this.body = new Body(bodyParts);
+			if(boundary == null) {
+				List<String> bodyParts = new ArrayList<String>();
+				bodyParts.add(s);
+				this.body = new Body(bodyParts);
+			}
+			else {
+				ArrayList<String> bodyParts = new ArrayList<>(Arrays.asList(s.split("(?=--"+boundary+")")));
+				this.body = new Body(bodyParts);
+			}
 		}
 		catch(Exception e){
 			System.out.println("Not a Body!");

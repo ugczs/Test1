@@ -22,10 +22,10 @@ public class Body {
 	 */
 	public String getContent(int i) {
 		if (i < bodyList.size()) {
-			return bodyList.get(i).trim();
+			return bodyList.get(i).trim() + '\n';
 		}
 		else {
-			System.out.println("Invalid Number!");
+			System.out.println("Invalid Number!!");
 			return null;
 		}
 	}
@@ -34,7 +34,17 @@ public class Body {
 	 * Diese Methode liefert die Anzahl der Teile von Body
 	 */
 	public int getBodySize() {
-		return bodyList.size();
-		
+		return bodyList.size();	
+	}
+	
+	/**
+	 * Diese Methode gibt den gesamten Body aus.
+	 */
+	public String printBody() {
+		String s = "";
+		for(String i : bodyList) {
+			s = s + i;
+			}
+		return s;
 	}
 }

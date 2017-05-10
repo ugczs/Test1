@@ -3,7 +3,11 @@ public class Test {
 
 	public static void main(String[] args) throws Exception {
 		// Eine Email wird eingelesen
-		MailReader mr = new MailReader("testmail.txt");
+		//MailReader mr = new MailReader("C:/Users/yu/Desktop/testmail.txt");
+		//MailReader mr = new MailReader("C:/Users/yu/Desktop/email test/test1.eml");
+		MailReader mr = new MailReader("C:/Users/yu/Desktop/email test/test3.eml");
+		//MailReader mr = new MailReader("C:/Users/yu/Desktop/email test/test3.eml");
+		//MailReader mr = new MailReader("C:/Users/yu/Desktop/email test/test4.txt");
 		String s = mr.getMail();
 		
 		// gibt die Strings von testmail.txt aus
@@ -15,7 +19,8 @@ public class Test {
 		mp.splitMail(mr);
 		mp.setHeader();
 		
-		
+		//gibt Header aus
+		print("test 1.1: \n" + mp.getHeader().getHeaderContent());
 		// gibt Absender aus
 		print("test 2: \n" + mp.getHeader().getFrom());
 		// gibt Empfänger aus
@@ -36,8 +41,10 @@ public class Test {
 		print("test 9: \n" + mp.getBody().getContent(1));
 		//Inhalt von Bodyteil 2
 		print("test 10: \n" + mp.getBody().getContent(2));
-		
-	
+		//Inhalt von Bodyteil 3
+		print("test 11: \n" + mp.getBody().getContent(3));
+		//Inhalt vom gesamten Body
+		print("test 12: \n" + mp.getBody().printBody());
 	}
 	
 	public static void print(Object o) {
