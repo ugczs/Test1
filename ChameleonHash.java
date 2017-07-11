@@ -15,7 +15,7 @@ public class ChameleonHash {
 	private BigInteger beta2;
 	private BigInteger k2;
 	private int g = 4;
-	private int bit = 5;
+	private int bit = 8;
 	private BigInteger e;
 	private BigInteger e2;
 	private String chameleonHash;
@@ -26,7 +26,7 @@ public class ChameleonHash {
 		calcY();
 		calcAlpha();
 		calcBeta();
-		hashMsgToFixedLength (msg, alpha);
+		calcE(msg);
 		//chameleonHashing(msg, alpha, beta);
 		//calcK2();
 		//calcAlpha2();
@@ -84,7 +84,7 @@ public class ChameleonHash {
 	 * @param msg ist die urspruengliche Nachricht
 	 * @param random ist eine Zufallszahl bzw. alpha
 	 */
-	public void hashMsgToFixedLength (String msg, BigInteger random) throws NoSuchAlgorithmException {
+	public BigInteger hashMsgToFixedLength (String msg, BigInteger random) throws NoSuchAlgorithmException {
 		String random1 = fromBigInteger(random);
 		String msg1 = random1 + msg;
 		MessageDigest m = MessageDigest.getInstance("MD5");
@@ -92,25 +92,31 @@ public class ChameleonHash {
 		m.update(msg1.getBytes());
 		byte[] digest = m.digest();
 		BigInteger bigInt = new BigInteger(1, digest);
-		e = bigInt;	
+		return bigInt;
 	}
 	
 	/**
-	 * Diese Methode verwandelt eine Nachricht zu einer Nachricht bestimmter Laenge
-	 * @param msg2 ist die urspruengliche Nachricht
-	 * @param random ist eine Zufallszahl bzw. alpha2
+	 * Diese Methode berechnet e
+	 * e hat eine feste Laenge von Typ BigInteger
 	 */
-	public void hashMsgToFixedLength2 (String msg2, BigInteger random) throws NoSuchAlgorithmException {
-		String random1 = fromBigInteger(random);
-		String msg1 = random1 + msg2;
-		MessageDigest m = MessageDigest.getInstance("MD5");
-		m.reset();
-		m.update(msg1.getBytes());
-		byte[] digest = m.digest();
-		BigInteger bigInt = new BigInteger(1, digest);
-		e2 = bigInt;	
+	public void calcE(String msg) throws NoSuchAlgorithmException {
+		e = hashMsgToFixedLength(msg, alpha);
 	}
 	
+	/**
+	 * Diese Methode berechnet e2
+	 * e2 hat eine feste Laenge von Typ BigInteger
+	 */
+	public void calcE2(String msg) throws NoSuchAlgorithmException {
+		e2 = hashMsgToFixedLength(msg, alpha2);
+	}
+	
+	/**
+	 * Diese Methode berecht das Chameleon-Hasch
+	 * @param msg ist die Nachricht
+	 * @param alpha ist eine zufaellige Zahl in [0,q]
+	 * @param beta ist eine zufaellige Zahl in [0,q]
+	 */
 	public String chameleonHashing(String msg, BigInteger alpha, BigInteger beta) {
 		BigInteger b1;
 		BigInteger g1 = BigInteger.valueOf(this.g);
@@ -192,14 +198,10 @@ public class ChameleonHash {
 	 */
 	public void calcAlpha2() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
-		BigInteger b = pow (g1, k2);
-		BigInteger b2 = b.mod(p).mod(q);
+		BigInteger b = g1.modPow (k2, p);
+		BigInteger b2 = b.mod(q);
 		BigInteger b3 = toBigInteger(chameleonHash).add(b2);
 		alpha2 = b3;
-	}
-	
-	public void calcE2(String msg2) throws NoSuchAlgorithmException {
-		hashMsgToFixedLength2(msg2, alpha2);
 	}
 	
 	
