@@ -14,9 +14,8 @@ public class ChameleonHash {
 	private BigInteger beta;
 	private BigInteger beta2;
 	private BigInteger k2;
-	private int g = 2;
-	private int bit = 32;
-	private BigInteger u;
+	private int g = 4;
+	private int bit = 5;
 	private BigInteger e;
 	private BigInteger e2;
 	private String chameleonHash;
@@ -28,63 +27,98 @@ public class ChameleonHash {
 		calcY();
 		calcAlpha();
 		calcBeta();
+		hashMsgToFixedLength (msg, alpha);
 		chameleonHashing(msg, alpha, beta);
-		calcK2();
-		calcAlpha2();
-		calcE2("blablabal");
-		calcBeta2();
-		check();
+		//calcK2();
+		//calcAlpha2();
+		//calcE2("blablabal");
+		//calcBeta2();
+		//check();
 	}
 	
+	/**
+	 * Diese Methode berechnet p mit p = 2q + 1
+	 * p ist zudem prim
+	 */
 	public BigInteger calcP() {
-		u = new BigInteger (bit, new Random());
-		p = u.multiply(q).add(new BigInteger("1"));
-		while(p.isProbablePrime(-1) || p != u.multiply(q).add(new BigInteger("1"))) {
-			p = new BigInteger (bit, new Random());
-			p = u.multiply(q).add(new BigInteger("1"));
+		BigInteger u2 = toBigInteger("2");
+		p = u2.multiply(q).add(new BigInteger("1"));
+		while(!p.isProbablePrime(3)) {
+			calcQ();
+			calcP();
 		}
 		return p;
 	}
 	
+	/**
+	 * Diese Methode waehlt q zufaellig mit Bitlaenge bit
+	 * q ist prim
+	 */
 	public BigInteger calcQ() {
 		q = new BigInteger (bit, new Random());
-		while(q.isProbablePrime(-1)) {
+		while(!q.isProbablePrime(3)) {
 			q = new BigInteger (bit, new Random());
 		}
 		return q;
 	}
 	
+	/**
+	 * Diese Methode waehlt x zufaellig zwischen 1 und q-1
+	 */
 	public void calcX() {
 		x = randomBigIntegerLessThan(q);
 	}
 	
+	/**
+	 * Diese Methode berechnet y anhand x und g
+	 */
 	public void calcY() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		y = pow(g1, this.x);	
 	}
 	
+	/**
+	 * Diese Methode waehlt alpha zufaellig zwischen 0 und q
+	 */
 	public void calcAlpha() {
-		this.alpha = randomBigIntegerLessThan(q);
+		this.alpha = randomBigIntegerFromZeroTo(q);
 	}
 	
+	/**
+	 * Diese Methode waehlt beta zufaellig zwischen 0 und q
+	 */
 	public void calcBeta() {
-		this.beta = randomBigIntegerLessThan(q);
+		this.beta = randomBigIntegerFromZeroTo(q);
 	}
 	
-	public void hashMsgToFixedLength (String msg) throws NoSuchAlgorithmException {
+	/**
+	 * Diese Methode verwandelt eine Nachricht zu einer Nachricht bestimmter Laenge
+	 * @param msg ist die urspruengliche Nachricht
+	 * @param random ist eine Zufallszahl bzw. alpha
+	 */
+	public void hashMsgToFixedLength (String msg, BigInteger random) throws NoSuchAlgorithmException {
+		String random1 = fromBigInteger(random);
+		String msg1 = random1 + msg;
 		MessageDigest m = MessageDigest.getInstance("MD5");
 		m.reset();
-		m.update(msg.getBytes());
+		m.update(msg1.getBytes());
 		byte[] digest = m.digest();
 		BigInteger bigInt = new BigInteger(1, digest);
 		String a = bigInt.toString(16);
 		e = toBigInteger(a);	
 	}
 	
-	public void hashMsgToFixedLength2 (String msg2) throws NoSuchAlgorithmException {
+	/**
+	 * Diese Methode verwandelt eine Nachricht zu einer Nachricht bestimmter Laenge
+	 * @param msg2 ist die urspruengliche Nachricht
+	 * @param random ist eine Zufallszahl bzw. alpha2
+	 */
+	public void hashMsgToFixedLength2 (String msg2, BigInteger random) throws NoSuchAlgorithmException {
+		String random1 = fromBigInteger(random);
+		String msg1 = random1 + msg2;
 		MessageDigest m = MessageDigest.getInstance("MD5");
 		m.reset();
-		m.update(msg2.getBytes());
+		m.update(msg1.getBytes());
 		byte[] digest = m.digest();
 		BigInteger bigInt = new BigInteger(1, digest);
 		String a = bigInt.toString(16);
@@ -102,6 +136,12 @@ public class ChameleonHash {
 		return chameleonHash;
 	}
 	
+	/**
+	 * Diese Methode nimmt einen BigInt als Basis und einen BigInt als Exponent
+	 * und berecht das Ergebnis
+	 * @param base ist Basis
+	 * @param exponent ist exponent
+	 */
 	public BigInteger pow(BigInteger base, BigInteger exponent) {
 		  BigInteger result = BigInteger.ONE;
 		  while (exponent.signum() > 0) {
@@ -112,14 +152,26 @@ public class ChameleonHash {
 		  return result;
 		}
 	
+	/**
+	 * Diese Methode verwandelt einen String zu BigInteger
+	 * @param foo ist ein String
+	 */
 	public BigInteger toBigInteger(String foo) {
 	    return new BigInteger(foo.getBytes());
 	}
-
+	
+	/**
+	 * Diese Methode verwandelt einen BigInteger zu String
+	 * @param foo ist ein BigInteger
+	 */
 	public String fromBigInteger(BigInteger foo) {
 	    return new String(foo.toByteArray());
 	}
 	
+	/**
+	 * Diese Methode liefert einen BigInteger von 1 bis n-1 zufaellig
+	 * @param n-1 ist die groesste Zahl
+	 */
 	public BigInteger randomBigIntegerLessThan(BigInteger n) {
 	    Random rand = new Random();
 	    BigInteger result = new BigInteger(n.bitLength(), rand);
@@ -129,19 +181,39 @@ public class ChameleonHash {
 	    return result;
 	}
 	
+	/**
+	 * Diese Methode liefert einen BigInteger von 0 bis n zufaellig
+	 * @param n ist die groesste Zahl
+	 */
+	public BigInteger randomBigIntegerFromZeroTo(BigInteger n) {
+	    Random rand = new Random();
+	    BigInteger result = new BigInteger(n.bitLength(), rand);
+	    while( result.compareTo(n) == 1) {
+	        result = new BigInteger(n.bitLength(), rand);
+	    }
+	    return result;
+	}
+	
+	/**
+	 * Diese Methode waehlt k2 zufaellig zwischen 1 und q-1
+	 */
 	public void calcK2() {
 		k2 = randomBigIntegerLessThan(q);
 	}
 	
+	/**
+	 * Diese Methode berechnet alpha2
+	 */
 	public void calcAlpha2() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b = pow (g1, k2);
 		BigInteger b2 = b.mod(p).mod(q);
-		BigInteger b3 = toBigInteger(chameleonHash).add(b2);	
+		BigInteger b3 = toBigInteger(chameleonHash).add(b2);
+		alpha2 = b3;
 	}
 	
 	public void calcE2(String msg2) throws NoSuchAlgorithmException {
-		hashMsgToFixedLength2(msg2);
+		hashMsgToFixedLength2(msg2, alpha2);
 	}
 	
 	
@@ -163,8 +235,10 @@ public class ChameleonHash {
 		BigInteger b9 = b4.add(b5).subtract(b8);
 		
 		return(b9 == b4 && b3 == b4);	
-		
-
+	}
+	
+	public String getChameleonStringHash() {
+		return chameleonHash;
 	}
 	
 }
