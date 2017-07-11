@@ -21,14 +21,13 @@ public class ChameleonHash {
 	private String chameleonHash;
 	
 	public ChameleonHash(String msg) throws NoSuchAlgorithmException {
-		calcQ();
-		calcP();
+		calcQAndP();
 		calcX();
 		calcY();
 		calcAlpha();
 		calcBeta();
 		hashMsgToFixedLength (msg, alpha);
-		chameleonHashing(msg, alpha, beta);
+		//chameleonHashing(msg, alpha, beta);
 		//calcK2();
 		//calcAlpha2();
 		//calcE2("blablabal");
@@ -36,30 +35,19 @@ public class ChameleonHash {
 		//check();
 	}
 	
-	/**
-	 * Diese Methode berechnet p mit p = 2q + 1
-	 * p ist zudem prim
-	 */
-	public BigInteger calcP() {
-		BigInteger u2 = toBigInteger("2");
-		p = u2.multiply(q).add(new BigInteger("1"));
-		while(!p.isProbablePrime(3)) {
-			calcQ();
-			calcP();
-		}
-		return p;
-	}
 	
 	/**
 	 * Diese Methode waehlt q zufaellig mit Bitlaenge bit
-	 * q ist prim
+	 * Diese Methode berechnet p mit p = 2q + 1
 	 */
-	public BigInteger calcQ() {
+	public void calcQAndP() {
+		BigInteger u2 = BigInteger.valueOf(2);
 		q = new BigInteger (bit, new Random());
-		while(!q.isProbablePrime(3)) {
+		p = u2.multiply(q).add(new BigInteger("1"));
+		while(!q.isProbablePrime(5) || !p.isProbablePrime(5)) {
 			q = new BigInteger (bit, new Random());
+			p = u2.multiply(q).add(new BigInteger("1"));
 		}
-		return q;
 	}
 	
 	/**
@@ -104,8 +92,7 @@ public class ChameleonHash {
 		m.update(msg1.getBytes());
 		byte[] digest = m.digest();
 		BigInteger bigInt = new BigInteger(1, digest);
-		String a = bigInt.toString(16);
-		e = toBigInteger(a);	
+		e = bigInt;	
 	}
 	
 	/**
@@ -121,8 +108,7 @@ public class ChameleonHash {
 		m.update(msg1.getBytes());
 		byte[] digest = m.digest();
 		BigInteger bigInt = new BigInteger(1, digest);
-		String a = bigInt.toString(16);
-		e2 = toBigInteger(a);	
+		e2 = bigInt;	
 	}
 	
 	public String chameleonHashing(String msg, BigInteger alpha, BigInteger beta) {
@@ -132,7 +118,7 @@ public class ChameleonHash {
 		BigInteger b3 = pow (g1, beta);
 		BigInteger b4 = (b2.multiply(b3).mod(p)).mod(q);
 		b1 = alpha.subtract(b4);
-		this.chameleonHash = b1.toString(16);
+		this.chameleonHash = fromBigInteger(b1);
 		return chameleonHash;
 	}
 	
@@ -240,5 +226,35 @@ public class ChameleonHash {
 	public String getChameleonStringHash() {
 		return chameleonHash;
 	}
+
+	public BigInteger getY() {
+		return y;
+	}
+
+	public BigInteger getX() {
+		return x;
+	}
+
+	public BigInteger getP() {
+		return p;
+	}
+
+	public BigInteger getQ() {
+		return q;
+	}
+
+	public BigInteger getAlpha() {
+		return alpha;
+	}
+
+	public BigInteger getBeta() {
+		return beta;
+	}
+	
+	public BigInteger getE() {
+		return e;
+	}
+	
+	
 	
 }
