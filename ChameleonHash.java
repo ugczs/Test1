@@ -1,6 +1,7 @@
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
 
 
@@ -15,7 +16,7 @@ public class ChameleonHash {
 	private BigInteger beta2;
 	private BigInteger k2;
 	private int g = 4;
-	private int bit = 8;
+	private int bit = 128;
 	private BigInteger e;
 	private BigInteger e2;
 	private String chameleonHash;
@@ -27,12 +28,12 @@ public class ChameleonHash {
 		calcAlpha();
 		calcBeta();
 		calcE(msg);
-		//chameleonHashing(msg, alpha, beta);
-		//calcK2();
-		//calcAlpha2();
-		//calcE2("blablabal");
-		//calcBeta2();
-		//check();
+		chameleonHashing(msg, alpha, beta);
+		calcK2();
+		calcAlpha2();
+		calcE2("blablabal");
+		calcBeta2();
+		check();
 	}
 	
 	
@@ -42,10 +43,10 @@ public class ChameleonHash {
 	 */
 	public void calcQAndP() {
 		BigInteger u2 = BigInteger.valueOf(2);
-		q = new BigInteger (bit, new Random());
+		q = new BigInteger (bit, 5, new SecureRandom());
 		p = u2.multiply(q).add(new BigInteger("1"));
 		while(!q.isProbablePrime(5) || !p.isProbablePrime(5)) {
-			q = new BigInteger (bit, new Random());
+			q = new BigInteger (bit, 5, new SecureRandom());
 			p = u2.multiply(q).add(new BigInteger("1"));
 		}
 	}
@@ -62,7 +63,7 @@ public class ChameleonHash {
 	 */
 	public void calcY() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
-		y = pow(g1, this.x);	
+		y = g1.modPow(x, q);
 	}
 	
 	/**
@@ -120,14 +121,19 @@ public class ChameleonHash {
 	public String chameleonHashing(String msg, BigInteger alpha, BigInteger beta) {
 		BigInteger b1;
 		BigInteger g1 = BigInteger.valueOf(this.g);
-		BigInteger b2 = pow (y, e);
-		BigInteger b3 = pow (g1, beta);
+		BigInteger b2 = y.modPow (e, p);
+		BigInteger b3 = g1.modPow(beta, p);
 		BigInteger b4 = (b2.multiply(b3).mod(p)).mod(q);
 		b1 = alpha.subtract(b4);
 		this.chameleonHash = fromBigInteger(b1);
 		return chameleonHash;
 	}
 	
+	public BigInteger bigIntChameleonHash() {
+		return toBigInteger(chameleonHash);
+	}
+	
+
 	/**
 	 * Diese Methode nimmt einen BigInt als Basis und einen BigInt als Exponent
 	 * und berecht das Ergebnis
@@ -165,7 +171,7 @@ public class ChameleonHash {
 	 * @param n-1 ist die groesste Zahl
 	 */
 	public BigInteger randomBigIntegerLessThan(BigInteger n) {
-	    Random rand = new Random();
+	    Random rand = new SecureRandom();
 	    BigInteger result = new BigInteger(n.bitLength(), rand);
 	    while( result.compareTo(n) >= 0 || result.compareTo(BigInteger.valueOf(0)) == 0 ) {
 	        result = new BigInteger(n.bitLength(), rand);
@@ -178,7 +184,7 @@ public class ChameleonHash {
 	 * @param n ist die groesste Zahl
 	 */
 	public BigInteger randomBigIntegerFromZeroTo(BigInteger n) {
-	    Random rand = new Random();
+	    Random rand = new SecureRandom();
 	    BigInteger result = new BigInteger(n.bitLength(), rand);
 	    while( result.compareTo(n) == 1) {
 	        result = new BigInteger(n.bitLength(), rand);
@@ -211,14 +217,14 @@ public class ChameleonHash {
 	
 	public boolean check() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
-		BigInteger b = pow(y, e2).multiply(pow(g1, beta2));
+		BigInteger b = y.modPow(e2, p).multiply(g1.modPow(beta2, p));
 		BigInteger b2 = b.mod(p).mod(q);
 		BigInteger b3 = alpha2.subtract(b2);
 		
 		BigInteger b4 = toBigInteger(chameleonHash);
-		BigInteger b5 = pow(g1, k2).mod(p);
+		BigInteger b5 = g1.modPow(k2, p);
 		BigInteger b6 = x.multiply(e2);
-		BigInteger b7 = pow(g1, b6).multiply(pow(g1, beta2)).mod(p);
+		BigInteger b7 = g1.modPow(b6, p).multiply(g1.modPow(beta2, p)).mod(p);
 		BigInteger b8 = b7.mod(q);
 		BigInteger b9 = b4.add(b5).subtract(b8);
 		

@@ -13,7 +13,9 @@ public class MainChameleonHash {
 		print("alpha ist: " + ch.getAlpha());
 		print("beta ist: " + ch.getBeta());
 		print("e ist: " + ch.getE());
-		//System.out.println(ch.getChameleonStringHash());
+		print("String-Wert von ChamHash: " + ch.getChameleonStringHash());
+		print("BigInteger-Wert von ChamHash: " +ch.bigIntChameleonHash());
+		print(ch.check());
 	}
 	
 	public static void print(Object o) {
