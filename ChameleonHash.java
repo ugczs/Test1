@@ -31,9 +31,11 @@ public class ChameleonHash {
 		chameleonHashing(msg, alpha, beta);
 		calcK2();
 		calcAlpha2();
-		calcE2("blablabal");
+		calcE2("123");
 		calcBeta2();
-		check();
+		check1();
+		check2();
+		check3();
 	}
 	
 	
@@ -155,7 +157,7 @@ public class ChameleonHash {
 	 * @param foo ist ein String
 	 */
 	public BigInteger toBigInteger(String foo) {
-	    return new BigInteger(foo.getBytes());
+	    return new BigInteger(foo);
 	}
 	
 	/**
@@ -163,7 +165,7 @@ public class ChameleonHash {
 	 * @param foo ist ein BigInteger
 	 */
 	public String fromBigInteger(BigInteger foo) {
-	    return new String(foo.toByteArray());
+	    return new String(foo.toString());
 	}
 	
 	/**
@@ -215,20 +217,29 @@ public class ChameleonHash {
 		this.beta2 = k2.subtract(e2.multiply(x).mod(q));
 	}
 	
-	public boolean check() {
+	
+	public BigInteger check1() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b = y.modPow(e2, p).multiply(g1.modPow(beta2, p));
 		BigInteger b2 = b.mod(p).mod(q);
 		BigInteger b3 = alpha2.subtract(b2);
-		
+		return b3;
+	}
+	
+	public BigInteger check2() {
+		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b4 = toBigInteger(chameleonHash);
 		BigInteger b5 = g1.modPow(k2, p);
 		BigInteger b6 = x.multiply(e2);
 		BigInteger b7 = g1.modPow(b6, p).multiply(g1.modPow(beta2, p)).mod(p);
 		BigInteger b8 = b7.mod(q);
 		BigInteger b9 = b4.add(b5).subtract(b8);
-		
-		return(b9 == b4 && b3 == b4);	
+		return b9;
+	}
+	
+	public BigInteger check3() {
+		BigInteger b4 = toBigInteger(chameleonHash);
+		return b4;
 	}
 	
 	public String getChameleonStringHash() {
@@ -261,6 +272,22 @@ public class ChameleonHash {
 	
 	public BigInteger getE() {
 		return e;
+	}
+	
+	public BigInteger getE2() {
+		return e2;
+	}
+	
+	public BigInteger getK2() {
+		return k2;
+	}
+	
+	public BigInteger getAlpha2() {
+		return alpha2;
+	}
+
+	public BigInteger getBeta2() {
+		return beta2;
 	}
 	
 	

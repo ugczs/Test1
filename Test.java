@@ -34,17 +34,17 @@ public class Test {
 		
 		mp.setBody();
 		//gibt Größe der BodyListe aus(sollte 3 sein)
-//		print("test 7: \n" + mp.getBody().getBodySize());
-//		//Inhalt von Bodyteil 0
-//		print("test 8: \n" + mp.getBody().getContent(0));
-//		//Inhalt von Bodyteil 1
-//		print("test 9: \n" + mp.getBody().getContent(1));
-//		//Inhalt von Bodyteil 2
-//		print("test 10: \n" + mp.getBody().getContent(2));
-//		//Inhalt von Bodyteil 3
-//		print("test 11: \n" + mp.getBody().getContent(3));
-//		//Inhalt vom gesamten Body
-//		print("test 12: \n" + mp.getBody().printBody());
+		print("test 7: \n" + mp.getBody().getBodySize());
+		//Inhalt von Bodyteil 0
+		print("test 8: \n" + mp.getBody().getContent(0));
+		//Inhalt von Bodyteil 1
+		print("test 9: \n" + mp.getBody().getContent(1));
+		//Inhalt von Bodyteil 2
+		print("test 10: \n" + mp.getBody().getContent(2));
+		//Inhalt von Bodyteil 3
+		print("test 11: \n" + mp.getBody().getContent(3));
+		//Inhalt vom gesamten Body
+		print("test 12: \n" + mp.getBody().printBody());
 		print ("test 99: \n" + mp.combineParts());
 	}
 	
