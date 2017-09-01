@@ -1,6 +1,8 @@
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -300,5 +302,20 @@ public class Jtest {
 		}
 	}
 	
+	@Test
+	public void TestHashTree() {
+		try {
+			List<String> l = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			HashTree h = new HashTree(l);
+		    h.calcHashTree();
+		    String s = h.getRoot();
+		    assertEquals(s, "32560655549305688865853317129809488800");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }
