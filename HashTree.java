@@ -9,33 +9,66 @@ import java.util.List;
  * @author Yuguan
  */
 public class HashTree {
-	private String root;
+	private Node root;
     private List<String> itemList;
+    private List<Node> nodeList = new ArrayList<Node>();
     
-    public HashTree(List<String> itemList) {
+    public HashTree(List<String> itemList) throws Exception {
     	this.itemList = itemList;
+    	calcNodeList();
+    	calcHashTree();
+    }
+    
+    public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	/**
+     * Berechnet die Blaetter.
+     */
+    public void calcNodeList() {
+    	for (int i = 0; i < itemList.size(); i++) {
+    		String s = commit(itemList.get(i));
+    		this.nodeList.add(new Node(s));
+    	}
+    }
+    
+    public List<String> getItemList() {
+		return itemList;
+	}
+
+	/**
+     * Berechnet Commitment von einem String
+     */
+    public String commit(String value) {
+		return value;	
     }
     
     /**
-     * @param temp Eine Liste von Elemente
+     * @param child Eine Liste von Kinderknoten
      * @return Gibt die Liste von Elternknoten zurueck
      * @throws NoSuchAlgorithmException 
      */
-    private List<String> getNextLvlList(List<String> temp) throws NoSuchAlgorithmException {
+    private List<Node> getPreLvlList(List<Node> child) throws NoSuchAlgorithmException {
     	int i = 0;
-    	List<String> nextLvl = new ArrayList<String>();
-    	while (i < temp.size()) {
-    		String left = temp.get(i);
+    	List<Node> preLvl = new ArrayList<Node>();
+    	while (i < child.size()) {
+    		Node left = child.get(i);
     		i++;
-    		String right = "";
-    		if (i != temp.size()) {
-    			right = temp.get(i);
+    		Node right = new Node("");
+    		if (i != child.size()) {
+    			right = child.get(i);
+    		}
+    		String hash = calcHash(left.getValue() + right.getValue());
+    		Node n = new Node(hash);
+    		left.setParentNode(n);
+    		right.setParentNode(n);
+    		n.setLeft(left);
+    		n.setRight(right);
+    		preLvl.add(n);
+    		i++;
         }
-        String hash = calcHash(left + right);
-        nextLvl.add(hash);
-        i++;
-        }
-    	return nextLvl;
+    	return preLvl;
     }
 
     /**
@@ -43,15 +76,15 @@ public class HashTree {
      * @throws NoSuchAlgorithmException 
      */
     public void calcHashTree() throws NoSuchAlgorithmException {
-    	List<String> temp = new ArrayList<String>();
-    	for (int i = 0; i < itemList.size(); i++){
-    		temp.add(itemList.get(i));
+    	List<Node> temp = new ArrayList<Node>();
+    	for (int i = 0; i < nodeList.size(); i++){
+    		temp.add(nodeList.get(i));
     	}
-    	List<String> nextLvl = getNextLvlList(temp);
-    	while (nextLvl.size() > 1) {
-    		nextLvl = getNextLvlList(nextLvl);
+    	List<Node> preLvl = getPreLvlList(temp);
+    	while (preLvl.size() > 1) {
+    		preLvl = getPreLvlList(preLvl);
     	}
-    	root = nextLvl.get(0);
+    	root = preLvl.get(0);
     }
     
     /**
@@ -71,7 +104,7 @@ public class HashTree {
      * Getter von root
      * @return gibt Wert von root zurueck
      */
-    public String getRoot(){
+    public Node getRoot(){
       return root;
     }
 

@@ -65,7 +65,7 @@ public class ChameleonHash {
 	 */
 	public void calcY() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
-		y = g1.modPow(x, q);
+		y = g1.modPow(x, p);
 	}
 	
 	/**
@@ -125,8 +125,8 @@ public class ChameleonHash {
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b2 = y.modPow (e, p);
 		BigInteger b3 = g1.modPow(beta, p);
-		BigInteger b4 = (b2.multiply(b3).mod(p)).mod(q);
-		b1 = alpha.subtract(b4);
+		BigInteger b4 = (b2.multiply(b3).mod(p));
+		b1 = alpha.subtract(b4).mod(q);
 		this.chameleonHash = fromBigInteger(b1);
 		return chameleonHash;
 	}
@@ -207,22 +207,22 @@ public class ChameleonHash {
 	public void calcAlpha2() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b = g1.modPow (k2, p);
-		BigInteger b2 = b.mod(q);
-		BigInteger b3 = toBigInteger(chameleonHash).add(b2);
+		BigInteger b2 = b;
+		BigInteger b3 = toBigInteger(chameleonHash).add(b2).mod(q);
 		alpha2 = b3;
 	}
 	
 	
 	public void calcBeta2() {
-		this.beta2 = k2.subtract(e2.multiply(x).mod(q));
+		this.beta2 = k2.subtract(e2.multiply(x).mod(q)).mod(q);
 	}
 	
 	
 	public BigInteger check1() {
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b = y.modPow(e2, p).multiply(g1.modPow(beta2, p));
-		BigInteger b2 = b.mod(p).mod(q);
-		BigInteger b3 = alpha2.subtract(b2);
+		BigInteger b2 = b.mod(p);
+		BigInteger b3 = alpha2.subtract(b2).mod(q);
 		return b3;
 	}
 	
@@ -230,10 +230,10 @@ public class ChameleonHash {
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b4 = toBigInteger(chameleonHash);
 		BigInteger b5 = g1.modPow(k2, p);
-		BigInteger b6 = x.multiply(e2);
+		BigInteger b6 = x.multiply(e2).mod(q);
 		BigInteger b7 = g1.modPow(b6, p).multiply(g1.modPow(beta2, p)).mod(p);
-		BigInteger b8 = b7.mod(q);
-		BigInteger b9 = b4.add(b5).subtract(b8);
+		BigInteger b8 = b7;
+		BigInteger b9 = b4.add(b5).subtract(b8).mod(q);
 		return b9;
 	}
 	

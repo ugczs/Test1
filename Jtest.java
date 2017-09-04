@@ -309,13 +309,28 @@ public class Jtest {
 			l.add("a");
 			l.add("b");
 			HashTree h = new HashTree(l);
-		    h.calcHashTree();
-		    String s = h.getRoot();
+		    String s = h.getRoot().getValue();
 		    assertEquals(s, "32560655549305688865853317129809488800");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	
+//	@Test
+//	public void TestHashTree2() {
+//		try {
+//			List<String> l = new ArrayList<String>();
+//			l.add("a");
+//			l.add("b");
+//			l.add("c");
+//			l.add("d");
+//			HashTree h = new HashTree(l);
+//		    String s = h.getItemList2().get(0);
+//		    assertEquals(s, "32560655549305688865853317129809488800");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }
