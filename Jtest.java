@@ -317,20 +317,77 @@ public class Jtest {
 		}
 	}
 	
-//	@Test
-//	public void TestHashTree2() {
-//		try {
-//			List<String> l = new ArrayList<String>();
-//			l.add("a");
-//			l.add("b");
-//			l.add("c");
-//			l.add("d");
-//			HashTree h = new HashTree(l);
-//		    String s = h.getItemList2().get(0);
-//		    assertEquals(s, "32560655549305688865853317129809488800");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	
+	@Test
+	public void TestaddVektor() {
+		try {
+			BitwiseCalculation bc = new BitwiseCalculation();
+			int[][] a = {{0, 0}, {1, 1}, {1, 0}, {0, 1}};
+			int[][] b = {{1, 1}, {1, 1}, {1, 1}, {1, 1}};
+			int[][] c = {{1, 1}, {0, 0}, {0, 1}, {1, 0}};
+			int[][] sol= bc.addVektor(a, b);
+			assertArrayEquals(c, sol);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestsubstractVektor() {
+		try {
+			BitwiseCalculation bc = new BitwiseCalculation();
+			int[][] a = {{0, 0}, {1, 1}, {1, 0}, {0, 1}};
+			int[][] b = {{1, 1}, {1, 1}, {1, 1}, {1, 1}};
+			int[][] c = {{1, 1}, {0, 0}, {0, 1}, {1, 0}};
+			int[][] sol= bc.substractVektor(c, b);
+			assertArrayEquals(a, sol);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestmultiplyMatrix() {
+		try {
+			BitwiseCalculation bc = new BitwiseCalculation();
+			int[][] a = {{1, 0}, {0, 1}, {1, 1}};
+			int[][] b = {{1}, {1}};
+			int[][] c = {{1}, {1}, {0}};
+			int[][] sol= bc.multiplyMatrix(a, b);
+			assertArrayEquals(c, sol);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestintArrayToBitString() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			int[][] a = {{1}, {0}, {1}, {1}, {0}};
+			String s = tc.intArrayToBitString(a);
+			assertEquals(s, "10110" );
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestbitStringToIntArray() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			String s = "101101";
+			int[][] a = {{1}, {0}, {1}, {1}, {0}, {1}};
+			int[][] b = tc.bitStringToIntArray(s);
+			assertArrayEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }
