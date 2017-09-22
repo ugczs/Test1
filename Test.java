@@ -1,4 +1,9 @@
+import java.math.BigInteger;
+import java.security.KeyPair;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -113,11 +118,66 @@ public class Test {
 		String sa = arrayToString(b1);
 		System.out.println(sa);
 		System.out.println("take care3");
-		ToeplitzCommitment tc = new ToeplitzCommitment("1");
-		int[][] aaa = {{1}, {0}, {1}, {1}, {0}};
-		String sss = tc.intArrayToBitString(aaa);
-		System.out.println(tc.getZ());
+		String sss = calcHash("1jsldfjkwjfkwfjjfaskdfjsadf");
+		String ssss = toB(sss);
+		System.out.println(sss.length());
+		System.out.println(sss);
+		System.out.println(ssss.length());
+		System.out.println(ssss);
+		ToeplitzCommitment tc = new ToeplitzCommitment("hahaha");
+		System.out.println(tc.getBitStringMsg());
+		System.out.println(tc.getBitStringMsg().length());
 		
+		int[] a2 = {1,2,3,4};
+		int[] a3 = {1,5,6,7};
+		ToeplitzMatrix tm = new ToeplitzMatrix(a2, a3);
+		int[][] a4 = tm.getToeplitzMatrix();
+		printMatrix(a4);
+		System.out.println("asdfdfasdfasd");
+		printMatrix2(tm.getRow());
+		printMatrix2(tm.getColumn());
+		
+	
+//		ToeplitzCommitment tcc = new ToeplitzCommitment("1");
+//		String mts = matrixToString(tcc.getToeplitzMatrix());
+//		printMatrix(tcc.getToeplitzMatrix());
+//		System.out.println(mts.length());
+//		System.out.println(mts);
+		
+		
+	}
+	
+	public static String matrixToString(int[][] intArray){
+		String result = "";
+		for (int i = 0; i < intArray.length; i++) {
+			for (int j = 0; j < intArray[i].length; j++) {
+				result += "" + intArray[i][j] ;
+		    }
+		}
+		return result;
+	}
+	
+	public static void printMatrix(int[][] sol) {
+		for (int i = 0; i < sol.length; i++) {
+			for (int j = 0; j < sol[i].length; j++) {
+		        System.out.print(sol[i][j] + " ");
+		    }
+		    System.out.println();
+		}
+	}
+	
+	public static void printMatrix2(int[] sol) {
+		for (int i = 0; i < sol.length; i++) {
+		        System.out.print(sol[i] + " ");
+		    }
+		    System.out.println();
+		}
+
+	
+	
+	public static String padLeftZeros(String s, int i) {
+		String str = String.format("%1$" + i + "s", s).replace(' ', '0');
+		return str;
 	}
 	
 	 private static String arrayToString(int[][] a){
@@ -129,6 +189,25 @@ public class Test {
 			}
 			return s;
 	 }
+	 
+	 public static String calcHash(String msg) throws NoSuchAlgorithmException {
+			MessageDigest m = MessageDigest.getInstance("MD5");
+			m.reset();
+			m.update(msg.getBytes());
+			byte[] digest = m.digest();
+			BigInteger bigInt = new BigInteger(1, digest);
+			String s = bigInt.toString(16);
+			return s;
+		}
+	 
+	 public static String toB(String hexString) {
+		  String binaryString = new BigInteger(hexString, 16).toString(2);
+		  return binaryString;
+	 }
+	 
+	 
 
-}		
+	}
+
+		
 

@@ -4,10 +4,12 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class ToeplitzCommitment {
+	private int bit = 128;
 	private int rowLength;
 	private int columnLength;
 	private String message;
 	private String bitStringMsg;
+	private ToeplitzMatrix tm;
 	private int[][] toeplitzMatrix;
 	private int[][] randomVektor;
 	private int[][]	b;
@@ -22,17 +24,26 @@ public class ToeplitzCommitment {
 			calcBitStringMsg(message);
 			this.rowLength = calcMsgLength(bitStringMsg);
 			this.columnLength = calcMsgLength(bitStringMsg);
-			ToeplitzMatrix tm= new ToeplitzMatrix(rowLength, columnLength);
+			this.tm = new ToeplitzMatrix(rowLength, columnLength);
 			this.toeplitzMatrix = tm.getToeplitzMatrix();
 			generateRandomVektor(columnLength);
 			calcB();
 			calcX();
-			hashWithMatrix();
+			hashWithMatrix(this.x);
 			calcZ();
 		}
 		catch(Exception ex) {
 			System.out.println(ex);
 		}
+	}
+	
+	/**
+     * Füllt Links von String s mit 0
+     * Die max. Laenge betraegt i
+     */
+	public String padLeftZeros(String s, int i) {
+		String str = String.format("%1$" + i + "s", s).replace(' ', '0');
+		return str;
 	}
 	
 	/**
@@ -53,7 +64,7 @@ public class ToeplitzCommitment {
      * berechnet Hashwert von einem String
      * @return gibt String-Hashwert zurueck
      */
-    public String calcHash(String msg) throws NoSuchAlgorithmException {
+	public String calcHash(String msg) throws NoSuchAlgorithmException {
 		MessageDigest m = MessageDigest.getInstance("MD5");
 		m.reset();
 		m.update(msg.getBytes());
@@ -70,7 +81,8 @@ public class ToeplitzCommitment {
     public String calcBitStringMsg(String msg) throws NoSuchAlgorithmException {
     	String s = calcHash(msg);
     	BigInteger b = toBigInteger(s);
-    	this.bitStringMsg = new String(b.toString(2));
+    	String s2 = new String(b.toString(2));
+    	this.bitStringMsg = padLeftZeros(s2, bit);
     	return bitStringMsg;
     }
     
@@ -192,28 +204,40 @@ public class ToeplitzCommitment {
 		this.b = b;
 	}
 	
-	public void calcX() {
-			try {
-				String s = calcBitStringMsg(bitStringMsg);
-				int[][] x = bitStringToIntArray(s);
-				this.x = x;
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public void calcX() throws NoSuchAlgorithmException {
+			int[][] x = bitStringToIntArray(bitStringMsg);
+			this.x = x;
 	}
 	
-	public void hashWithMatrix() {
+	public int getBit() {
+		return bit;
+	}
+
+	public void setBit(int bit) {
+		this.bit = bit;
+	}
+	
+	/**
+	 * Diese Methode berechnet einen Hash mit der Funktion
+	 * f(x) = Ax + b = y
+	 * @return y ist der Hashwert
+	 */
+	public void hashWithMatrix(int[][] x) {
 		int[][] temp = bc.multiplyMatrix(toeplitzMatrix, x);
 		int[][] y = bc.addVektor(temp, b);
 		this.y = y;
 	}
 	
+	/**
+	 * Diese Methode berechnet einen MD5-Hash mit Eingabe y
+	 * Ergebnis wird dann in z gespeichert.
+	 */
 	public void calcZ() {
 		String s = intArrayToBitString(y);
 		try {
-			String z = calcHash(s);
-			this.z = z;
+			String s2 = calcHash(s);
+			String s3 = padLeftZeros(s2, bit);
+			this.z = s3;
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,5 +247,50 @@ public class ToeplitzCommitment {
 	public String getZ() {
 		return z;
 	}
+	
+	/**
+	 * Diese Methode transformiert eine Matrix in String
+	 */
+	public String matrixToString(int[][] intArray){
+		String result = "";
+		for (int i = 0; i < intArray.length; i++) {
+			for (int j = 0; j < intArray[i].length; j++) {
+				result += "" + intArray[i][j] ;
+		    }
+		}
+		return result;
+	}
+	
+	/**
+	 * Diese Methode transformiert einen Array in String
+	 */
+	public String arrayToString(int[] intArray){
+		String result = "";
+		for (int i = 0; i < intArray.length; i++) {
+				result += "" + intArray[i] ;
+		}
+		return result;
+	}
+	
+	/**
+	 * Diese Methode gibt eine Matrix aus
+	 */
+	public void printMatrix(int[][] intArray) {
+		for (int i = 0; i < intArray.length; i++) {
+			for (int j = 0; j < intArray[i].length; j++) {
+		        System.out.print(intArray[i][j] + " ");
+		    }
+		    System.out.println();
+		}
+	}
+	
+	public String commitment() {
+		return "z is" + this.z + "ToeplitzRow is" + arrayToString(tm.getRow()) + 
+				"ToeplitzColumn is" + arrayToString(tm.getColumn()) +
+				"b is" + matrixToString(this.b);
+	}
 
+	public int[][] getToeplitzMatrix() {
+		return toeplitzMatrix;
+	}
 }

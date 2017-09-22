@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -389,5 +390,173 @@ public class Jtest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void TestrandomVektorlength() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			int a = tc.getRowLength();
+			int b = tc.getRandomVektor().length;
+			assertEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestcalcMsgLength() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			String s = "101101111";
+			int a = tc.calcMsgLength(s);
+			assertEquals(9, a);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestpadLeftZeros() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			String a = tc.padLeftZeros("test", 5);
+			String b = "0test";
+			assertEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	@Test
+	public void TestpadLeftZeros2() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			String a = tc.padLeftZeros("test", 4);
+			String b = "test";
+			assertEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestlengthBitStringMsg() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			int a = tc.getBitStringMsg().length();
+			int b = tc.getBit();
+			assertEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestZLength() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			int a = tc.getZ().length();
+			int b = tc.getBit();
+			assertEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestRsaSignature() {
+		try {
+			RsaSig r = new RsaSig();
+			KeyPair pair = r.generateKeyPair();
+			String signature = r.sign("text", pair.getPrivate());
+			boolean correct = r.verify("text", signature, pair.getPublic());
+			assertEquals(true, correct);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestmatrixToString() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			int[][] a2 = {{1, 0, 1}, {0, 1, 0},{0, 1, 1}};
+			String a = tc.matrixToString(a2);
+			String b = "101010011";
+			assertEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestarrayToString() {
+		try {
+			ToeplitzCommitment tc = new ToeplitzCommitment("1");
+			int[] a2 = {1, 0, 1, 1 ,1};
+			String a = tc.arrayToString(a2);
+			String b = "10111";
+			assertEquals(a, b);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestfilltoeplitzMatrix() {
+		try {
+			int[] a = {1,2,3,4};
+			int[] b = {1,5,6,7};
+			int[][] c = {{1,2,3,4},{5,1,2,3 }, {6,5,1,2}, {7,6,5,1}};
+			ToeplitzMatrix tm = new ToeplitzMatrix(a, b);
+			int[][] d = tm.getToeplitzMatrix();
+			assertArrayEquals(c, d);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestgetRowToeplitz() {
+		try {
+			int[] a = {1,2,3,4};
+			int[] b = {1,5,6,7};
+			ToeplitzMatrix tm = new ToeplitzMatrix(a, b);
+			int[] c = tm.getRow();
+			int[] d = tm.getColumn();
+			assertArrayEquals(c, a);
+			assertArrayEquals(b, d);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestRsaSignature2() {
+		try {
+			RsaSig r = new RsaSig();
+			KeyPair pair = r.generateKeyPair();
+			String signature = r.sign("text", pair.getPrivate());
+			boolean correct = r.verify("textt", signature, pair.getPublic());
+			assertEquals(false, correct);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 }
