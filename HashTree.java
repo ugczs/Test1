@@ -25,6 +25,7 @@ public class HashTree {
 
 	/**
      * Berechnet die Blaetter.
+	 * @throws NoSuchAlgorithmException 
      */
     public void calcNodeList() {
     	for (int i = 0; i < itemList.size(); i++) {
@@ -41,7 +42,9 @@ public class HashTree {
      * Berechnet Commitment von einem String
      */
     public String commit(String value) {
-		return value;	
+    	ToeplitzCommitment tc = new ToeplitzCommitment(value);
+    	String commitment = tc.getZ();
+		return commitment;	
     }
     
     /**

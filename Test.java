@@ -144,6 +144,14 @@ public class Test {
 //		System.out.println(mts.length());
 //		System.out.println(mts);
 		
+		ArrayList al = new ArrayList<String>();
+	    al.add("1");
+	    al.add("2");
+	    al.add("3");
+	    HashTree ht = new HashTree(al);
+	    String root = ht.getRoot().getValue();
+	    System.out.println(root);
+		
 		
 	}
 	

@@ -230,7 +230,7 @@ public class ToeplitzCommitment {
 	
 	/**
 	 * Diese Methode berechnet einen MD5-Hash mit Eingabe y
-	 * Ergebnis wird dann in z gespeichert.
+	 * Ergebnis wird dann in z gespeichert.(Commitment)
 	 */
 	public void calcZ() {
 		String s = intArrayToBitString(y);
@@ -284,7 +284,7 @@ public class ToeplitzCommitment {
 		}
 	}
 	
-	public String commitment() {
+	public String revealInfo() {
 		return "z is" + this.z + "ToeplitzRow is" + arrayToString(tm.getRow()) + 
 				"ToeplitzColumn is" + arrayToString(tm.getColumn()) +
 				"b is" + matrixToString(this.b);
