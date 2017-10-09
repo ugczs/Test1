@@ -7,6 +7,8 @@ public class ToeplitzCommitment {
 	private int bit = 128;
 	private int rowLength;
 	private int columnLength;
+	private int[] row;
+	private int[] column;
 	private String message;
 	private String bitStringMsg;
 	private ToeplitzMatrix tm;
@@ -34,6 +36,23 @@ public class ToeplitzCommitment {
 		}
 		catch(Exception ex) {
 			System.out.println(ex);
+		}
+	}
+	
+	public ToeplitzCommitment(String message, int[] row, int[] column, int[][] randomVektor) {
+		try {
+			this.message = message;
+			this.randomVektor = randomVektor;
+			calcBitStringMsg(message);
+			this.tm = new ToeplitzMatrix(row, column);
+			this.toeplitzMatrix = tm.getToeplitzMatrix();
+			calcB();
+			calcX();
+			hashWithMatrix(this.x);
+			calcZ();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -293,4 +312,29 @@ public class ToeplitzCommitment {
 	public int[][] getToeplitzMatrix() {
 		return toeplitzMatrix;
 	}
+	
+	/**
+	 * Diese Methode gibt die erste Zeile von Toeplitzmatrix aus
+	 * @return Int-Array
+	 */
+	public int[] getRow() {
+		this.row = new int[toeplitzMatrix[0].length];
+		for(int i = 0; i < this.toeplitzMatrix[0].length; i++) {
+			this.row[i] = toeplitzMatrix[0][i];
+		}
+		return row;
+	}
+	
+	/**
+	 * Diese Methode gibt die erste Spalte von Toeplitzmatrix aus
+	 * @return Int-Array
+	 */
+	public int[] getColumn() {
+		this.column = new int[this.toeplitzMatrix.length];
+		for(int i = 0; i < this.toeplitzMatrix.length; i++) {
+			this.column[i] = toeplitzMatrix[i][0];
+		}
+		return column;
+	}
+	
 }

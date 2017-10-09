@@ -1,7 +1,10 @@
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,57 +89,57 @@ public class Test {
 //		    System.out.println();
 //		}
 		
-		String s  = "101011110";
-		String[] stringArray = s.split("");
-		int[][] intArray = new int[stringArray.length][1];
-		for (int i = 0; i < stringArray.length; i++) {
-			intArray[i][0] = Integer.parseInt(stringArray[i]);
-		}
-		for (int i = 0; i < intArray.length; i++) {
-			for (int j = 0; j < intArray[i].length; j++) {
-		        System.out.print(intArray[i][j] + " ");
-		    }
-		    System.out.println();
-		}
-		
-		BitwiseCalculation bc = new BitwiseCalculation();
-		System.out.println(bc.add(0, 0));
-		System.out.println("take care");
-		int[][] a1 = {{1, 0}, {0, 1}, {1, 1}};
-		int[][] b = {{1}, {1}};
-		int[][] sol= bc.multiplyMatrix(a1, b);
-		for (int i = 0; i < sol.length; i++) {
-			for (int j = 0; j < sol[i].length; j++) {
-		        System.out.print(sol[i][j] + " ");
-		    }
-		    System.out.println();
-		}
-		System.out.println(a1[0].length); //spalte
-		System.out.println(a1.length);
-		System.out.println("take care2");
-		int[][] b1 = {{1}, {0}, {1}, {1},{0}};
-		String sa = arrayToString(b1);
-		System.out.println(sa);
-		System.out.println("take care3");
-		String sss = calcHash("1jsldfjkwjfkwfjjfaskdfjsadf");
-		String ssss = toB(sss);
-		System.out.println(sss.length());
-		System.out.println(sss);
-		System.out.println(ssss.length());
-		System.out.println(ssss);
-		ToeplitzCommitment tc = new ToeplitzCommitment("hahaha");
-		System.out.println(tc.getBitStringMsg());
-		System.out.println(tc.getBitStringMsg().length());
-		
-		int[] a2 = {1,2,3,4};
-		int[] a3 = {1,5,6,7};
-		ToeplitzMatrix tm = new ToeplitzMatrix(a2, a3);
-		int[][] a4 = tm.getToeplitzMatrix();
-		printMatrix(a4);
-		System.out.println("asdfdfasdfasd");
-		printMatrix2(tm.getRow());
-		printMatrix2(tm.getColumn());
-		
+//		String s  = "101011110";
+//		String[] stringArray = s.split("");
+//		int[][] intArray = new int[stringArray.length][1];
+//		for (int i = 0; i < stringArray.length; i++) {
+//			intArray[i][0] = Integer.parseInt(stringArray[i]);
+//		}
+//		for (int i = 0; i < intArray.length; i++) {
+//			for (int j = 0; j < intArray[i].length; j++) {
+//		        System.out.print(intArray[i][j] + " ");
+//		    }
+//		    System.out.println();
+//		}
+//		
+//		BitwiseCalculation bc = new BitwiseCalculation();
+//		System.out.println(bc.add(0, 0));
+//		System.out.println("take care");
+//		int[][] a1 = {{1, 0}, {0, 1}, {1, 1}};
+//		int[][] b = {{1}, {1}};
+//		int[][] sol= bc.multiplyMatrix(a1, b);
+//		for (int i = 0; i < sol.length; i++) {
+//			for (int j = 0; j < sol[i].length; j++) {
+//		        System.out.print(sol[i][j] + " ");
+//		    }
+//		    System.out.println();
+//		}
+//		System.out.println(a1[0].length); //spalte
+//		System.out.println(a1.length);
+//		System.out.println("take care2");
+		int[][] b1 = {{1, 2}, {0, 2}, {1, 2}, {1, 2},{0, 2}};
+//		String sa = arrayToString(b1);
+//		System.out.println(sa);
+//		System.out.println("take care3");
+//		String sss = calcHash("1jsldfjkwjfkwfjjfaskdfjsadf");
+//		String ssss = toB(sss);
+//		System.out.println(sss.length());
+//		System.out.println(sss);
+//		System.out.println(ssss.length());
+//		System.out.println(ssss);
+//		ToeplitzCommitment tc = new ToeplitzCommitment("hahaha");
+//		System.out.println(tc.getBitStringMsg());
+//		System.out.println(tc.getBitStringMsg().length());
+//		
+//		int[] a2 = {1,2,3,4};
+//		int[] a3 = {1,5,6,7};
+//		ToeplitzMatrix tm = new ToeplitzMatrix(a2, a3);
+//		int[][] a4 = tm.getToeplitzMatrix();
+//		printMatrix(a4);
+//		System.out.println("asdfdfasdfasd");
+//		printMatrix2(tm.getRow());
+//		printMatrix2(tm.getColumn());
+//		
 	
 //		ToeplitzCommitment tcc = new ToeplitzCommitment("1");
 //		String mts = matrixToString(tcc.getToeplitzMatrix());
@@ -144,15 +147,71 @@ public class Test {
 //		System.out.println(mts.length());
 //		System.out.println(mts);
 		
-		ArrayList al = new ArrayList<String>();
-	    al.add("1");
-	    al.add("2");
-	    al.add("3");
-	    HashTree ht = new HashTree(al);
-	    String root = ht.getRoot().getValue();
-	    System.out.println(root);
+//		ArrayList al = new ArrayList<String>();
+//	    al.add("1");
+//	    
+//	    HashTree ht = new HashTree(al);
+//	    String root = ht.getRoot().getValue();
+//	    System.out.println(root);
+//	    
+//	    String s7 = calcHash("1");
+//	    String s8 = calcHash(s7);
+//	    System.out.println(s8);
+		printMatrix(b1);
 		
+//		List<String> l = new ArrayList<String>();
+//		l.add("a");
+//		l.add("b");
+//		l.add("c");
+//		l.add("d");
+//		HashTree h = new HashTree(l);
+//		List<CommitmentSet> setList = h.getSetList();
+//		HashTree h2 = new HashTree(l, setList);
+//	    String s = h.getRoot().getValue();
+//	    String s2 = h2.getRoot().getValue();
+//	    print(s);
+//	    print(s2);
+//	    
+	    List<String> l = new ArrayList<String>();
+		List<Integer> l2 = new ArrayList<Integer>();
+		List<String> l3 = new ArrayList<String>();
+		l.add("aa");
+		l.add("b");
+		l.add("c");
+		l.add("d");
+		l2.add(0);
+		l2.add(1);
+		l3.add("a");
+		l3.add("b");
+		l3.add("c");
+		l3.add("d");
+//		for(int i = 0; i < l2.size(); i++) {
+//			int index = l2.get(i);
+//			l3.set(index , l.get(index));
+//		}
+//		print(l3.get(2));
+		SignatureCheck s = new SignatureCheck(l2, l, l3);
+		String ss1 = s.firstSignature(l);
+		String ss2 = s.secSignature(l3, l2);
+	    print(ss1);
+	    print(ss2);
+	    
+	    
+	    String i = padLeftZeros("123", 5);
+		print(i);
 		
+		addIndex(l);
+		print(l);
+
+	}
+	
+	public static void addIndex(List<String> itemList) {
+		for(int i = 0; i < itemList.size(); i++) {
+			String s = Integer.toString(i);
+			String s1 = padLeftZeros(s, 5);
+			String s2 = itemList.get(i) + s1;
+			itemList.set(i , s2);
+		}
 	}
 	
 	public static String matrixToString(int[][] intArray){
@@ -213,6 +272,9 @@ public class Test {
 		  return binaryString;
 	 }
 	 
+	 public static void print(Object s) {
+		 System.out.println(s);
+	 }
 	 
 
 	}

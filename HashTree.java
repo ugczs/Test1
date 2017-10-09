@@ -12,10 +12,21 @@ public class HashTree {
 	private Node root;
     private List<String> itemList;
     private List<Node> nodeList = new ArrayList<Node>();
+    private List<CommitmentSet> setList = new ArrayList<CommitmentSet>();
     
     public HashTree(List<String> itemList) throws Exception {
     	this.itemList = itemList;
     	calcNodeList();
+    	calcHashTree();
+    }
+    
+    /**
+     * Berechnet den Hash-Tree mit vorgegebenen Toeplitzkomponenten
+     */
+    public HashTree(List<String> itemList, List<CommitmentSet> setList) throws Exception {
+    	this.setList = setList;
+    	this.itemList = itemList;
+    	calcNodeList2();
     	calcHashTree();
     }
     
@@ -25,11 +36,17 @@ public class HashTree {
 
 	/**
      * Berechnet die Blaetter.
-	 * @throws NoSuchAlgorithmException 
      */
     public void calcNodeList() {
     	for (int i = 0; i < itemList.size(); i++) {
     		String s = commit(itemList.get(i));
+    		this.nodeList.add(new Node(s));
+    	}
+    }
+    
+    public void calcNodeList2() {
+    	for (int i = 0; i < itemList.size(); i++) {
+    		String s = commit2(itemList.get(i), setList.get(i));
     		this.nodeList.add(new Node(s));
     	}
     }
@@ -40,10 +57,25 @@ public class HashTree {
 
 	/**
      * Berechnet Commitment von einem String
+     * und feugt Komponente von Toeplitzmatrix in setList ein
      */
     public String commit(String value) {
     	ToeplitzCommitment tc = new ToeplitzCommitment(value);
     	String commitment = tc.getZ();
+    	int[] row = tc.getRow();
+    	int[] column = tc.getColumn();
+    	int[][] randomVektor = tc.getRandomVektor();
+    	this.setList.add(new CommitmentSet(row, column, randomVektor));
+		return commitment;	
+    }
+    
+    public String commit2(String value, CommitmentSet set) {
+    	int[] row = set.getRow();
+    	int[] column = set.getColumn();
+    	int[][] randomVektor = set.getRandomVektor();
+    	ToeplitzCommitment tc = new ToeplitzCommitment(value, row, column, randomVektor);
+    	String commitment = tc.getZ();
+    	this.setList.add(new CommitmentSet(row, column, randomVektor));
 		return commitment;	
     }
     
@@ -111,4 +143,12 @@ public class HashTree {
       return root;
     }
 
+	public List<CommitmentSet> getSetList() {
+		return setList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+	
   }

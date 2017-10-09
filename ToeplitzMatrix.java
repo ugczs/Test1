@@ -62,14 +62,24 @@ public class ToeplitzMatrix {
 		return t;
 	}
 	
+	/**
+	 * Diese Methode gibt die erste Zeile von Toeplitzmatrix aus
+	 * @return Int-Array
+	 */
 	public int[] getRow() {
+		this.row = new int[toeplitzMatrix[0].length];
 		for(int i = 0; i < this.toeplitzMatrix[0].length; i++) {
-		this.row[i] = toeplitzMatrix[0][i];
+			this.row[i] = toeplitzMatrix[0][i];
 		}
 		return row;
 	}
-
+	
+	/**
+	 * Diese Methode gibt die erste Spalte von Toeplitzmatrix aus
+	 * @return Int-Array
+	 */
 	public int[] getColumn() {
+		this.column = new int[this.toeplitzMatrix.length];
 		for(int i = 0; i < this.toeplitzMatrix.length; i++) {
 			this.column[i] = toeplitzMatrix[i][0];
 		}

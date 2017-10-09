@@ -21,21 +21,26 @@ public class ChameleonHash {
 	private BigInteger e2;
 	private String chameleonHash;
 	
-	public ChameleonHash(String msg) throws NoSuchAlgorithmException {
-		calcQAndP();
-		calcX();
-		calcY();
-		calcAlpha();
-		calcBeta();
-		calcE(msg);
-		chameleonHashing(msg, alpha, beta);
-		calcK2();
-		calcAlpha2();
-		calcE2("123");
-		calcBeta2();
-		check1();
-		check2();
-		check3();
+	public ChameleonHash(String msg)  {
+		try {
+			calcQAndP();
+			calcX();
+			calcY();
+			calcAlpha();
+			calcBeta();
+			calcE(msg);
+			chameleonHashing(msg, alpha, beta);
+			calcK2();
+			calcAlpha2();
+			calcE2("123");
+			calcBeta2();
+			check1();
+			check2();
+			check3();
+		}
+		catch(Exception e) {
+			System.err.println("Wrong algorithm");
+		}
 	}
 	
 	
