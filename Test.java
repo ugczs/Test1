@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -172,37 +173,101 @@ public class Test {
 //	    print(s);
 //	    print(s2);
 //	    
-	    List<String> l = new ArrayList<String>();
-		List<Integer> l2 = new ArrayList<Integer>();
-		List<String> l3 = new ArrayList<String>();
-		l.add("aa");
-		l.add("b");
-		l.add("c");
-		l.add("d");
-		l2.add(0);
-		l2.add(1);
-		l3.add("a");
-		l3.add("b");
-		l3.add("c");
-		l3.add("d");
+//	    List<String> l = new ArrayList<String>();
+//		List<Integer> l2 = new ArrayList<Integer>();
+//		List<String> l3 = new ArrayList<String>();
+//		l.add("aa");
+//		l.add("b");
+//		l.add("c");
+//		l.add("d");
+//		l2.add(0);
+//		l2.add(1);
+//		l3.add("a");
+//		l3.add("b");
+//		l3.add("c");
+//		l3.add("d");
 //		for(int i = 0; i < l2.size(); i++) {
 //			int index = l2.get(i);
 //			l3.set(index , l.get(index));
 //		}
 //		print(l3.get(2));
-		SignatureCheck s = new SignatureCheck(l2, l, l3);
-		String ss1 = s.firstSignature(l);
-		String ss2 = s.secSignature(l3, l2);
-	    print(ss1);
-	    print(ss2);
-	    
-	    
-	    String i = padLeftZeros("123", 5);
-		print(i);
+//		SignatureCheck s = new SignatureCheck(l2, l, l3);
+//		String ss1 = s.firstSignature(l);
+//		String ss2 = s.secSignature(l3, l2);
+//	    print(ss1);
+//	    print(ss2);
+//	    
+//	    
+//	    String i = padLeftZeros("123", 5);
+//		print(i);
+//		
+//		addIndex(l);
+//		print(l);
 		
-		addIndex(l);
-		print(l);
+		List<String> l = new ArrayList<String>();
+		List<Integer> l2 = new ArrayList<Integer>();
+		List<String> l3 = new ArrayList<String>();
+		List<String> l4 = new ArrayList<String>();
+		l.add("a");
+		l.add("b");
+		l.add("c");
+		l.add("d");
+		l.add("jasdf");
+		l2.add(0);
+		l2.add(1);
+		l3.add("");
+		l3.add("b");
+		l3.add("c");
+		l3.add("d");
+		
+		Chameleon c = new Chameleon("");
+		c.calcAlpha();
+		c.calcBeta();
+		c.calcE("ha");
+		c.chameleonHashing("ha", c.getAlpha(), c.getBeta());
+		print(c.getChameleonStringHash());
 
+	}
+	
+	
+	public static void addIndexToMsg(List<String> itemList, List<Integer> changableIndex) {
+		List<String> itemList2 = new ArrayList<String>();
+		itemList2 = itemList;
+		for(int i = 0; i < changableIndex.size(); i++) {
+			int index = changableIndex.get(i);
+			String s = Integer.toString(index);
+			String s1 = padLeftZeros(s, 5);
+			String s2 = itemList2.get(index) + s1;
+			itemList2.set(index , s2);
+		}
+			List<Integer> l = changableIndex;
+			List<Integer> notChanged = new ArrayList<Integer>();
+			int size = itemList.size();
+			for(int i = 0; i < size; i++) {
+				notChanged.add(i);
+			}
+			notChanged.removeAll(l);
+			for(int i = 0; i < notChanged.size(); i++) {
+				int index = notChanged.get(i);
+				String s = Integer.toString(index);
+				String s1 = padLeftZeros(s, 5);
+				String s2 = "hahaha"+ s1 + itemList2.get(index);
+				itemList2.set(index , s2);
+			}
+	}
+	
+	
+	public static List<Integer> calcChangedIndex (List<String> l, List<String> l2) {
+		List<Integer> l3 = new ArrayList<Integer>();
+		if(l.size() != l2.size()) {
+			System.err.println("Not the same size");
+		}
+		for(int i = 0; i < l.size(); i++) {
+			if(!l.get(i).equals(l2.get(i))) {
+				l3.add(i);
+			}
+		}
+		return l3;
 	}
 	
 	public static void addIndex(List<String> itemList) {

@@ -705,4 +705,90 @@ public class Jtest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void TestSigner1() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l3.add("aa");
+			l3.add("bb");
+			l3.add("c");
+			l3.add("d");
+			Signer s = new Signer(l2, l);
+			Editor e = new Editor(s, l3);
+			String s1 = s.getS();
+			String s2 = e.getS2();
+		    assertEquals(s1 , s2);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestVerifier() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l3.add("aa");
+			l3.add("bb");
+			l3.add("c");
+			l3.add("d");
+			Signer s = new Signer(l2, l);
+			Editor e = new Editor(s, l3);
+			Verifier v = new Verifier(e);
+			String s1 = s.getS();
+			String s2 = e.getS2();
+			String s3 = v.getS3();
+		    assertEquals(s3 , s2);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestVerifierMsG() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l3.add("");
+			l3.add("b");
+			l3.add("c");
+			l3.add("d");
+			Signer s = new Signer(l2, l);
+			Editor e = new Editor(s, l3);
+			Verifier v = new Verifier(e);
+			List<String> l4 = v.getMsg();
+		    assertEquals(l4 , l3);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
