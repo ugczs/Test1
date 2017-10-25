@@ -8,6 +8,7 @@ public class HtVerifier {
 	private HashTree t3;
 	private HtEditor htEditor;
 	private List<Integer> changes;
+	private List<Integer> changeableIndex;
 	private List<String> msg;
 	
 	public HtVerifier (HtEditor htEditor) {
@@ -69,5 +70,39 @@ public class HtVerifier {
 		return s3;
 	}
 	
+	public String combineInfos() {
+		String s = cocateAll();
+		String size = Integer.toString(calcBlocks());
+		String s2 =  padLeftZeros(size, 5);
+		String s3 = this.s3;
+		String s4 = s + s2 + s3;
+		return s4;
+	}
 	
+	public String cocateAll() {
+		String s = "";
+		List<Integer> l = new ArrayList<Integer>(this.changeableIndex);
+		for(int i : l) {
+			s = s + i;
+		}
+		return s;
+	}
+
+	public int calcBlocks() {
+		int i = msg.size();
+		return i;
+	}
+	
+	/**
+     * Füllt Links von String s mit 0
+     * Die max. Laenge betraegt i
+     */
+	public String padLeftZeros(String s, int i) {
+		String str = String.format("%1$" + i + "s", s).replace(' ', '0');
+		return str;
+	}
+
+	public void setChangeableIndex(List<Integer> changeableIndex) {
+		this.changeableIndex = changeableIndex;
+	}
 }

@@ -706,8 +706,11 @@ public class Jtest {
 		}
 	}
 	
+	/**
+	 * Diese Methode verifiziert Nachrichten von HtEditor
+	 */
 	@Test
-	public void TestSigner1() {
+	public void TestHtEditor() {
 		try {
 			List<String> l = new ArrayList<String>();
 			List<Integer> l2 = new ArrayList<Integer>();
@@ -719,14 +722,17 @@ public class Jtest {
 			l2.add(0);
 			l2.add(1);
 			l3.add("aa");
-			l3.add("bb");
+			l3.add("b");
 			l3.add("c");
 			l3.add("d");
 			HtSigner s = new HtSigner(l2, l);
 			HtEditor e = new HtEditor(s, l3);
-			String s1 = s.getS();
-			String s2 = e.getS2();
-		    assertEquals(s1 , s2);
+			e.setChangeableIndex(s.getChangableIndex());
+			String combine = s.combineInfos();
+			String signature = s.sign(combine);
+			String combine2 = e.combineInfos();
+			boolean b = s.getRsaSig().verify(combine2, signature, s.getPublicKey());
+		    assertEquals(true , b);
 		} 
 		catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -734,8 +740,11 @@ public class Jtest {
 		}
 	}
 	
+	/**
+	 * Diese Methode verifiziert Nachrichten von HtVerifier
+	 */
 	@Test
-	public void TestVerifier() {
+	public void TestHtVerifier() {
 		try {
 			List<String> l = new ArrayList<String>();
 			List<Integer> l2 = new ArrayList<Integer>();
@@ -753,10 +762,13 @@ public class Jtest {
 			HtSigner s = new HtSigner(l2, l);
 			HtEditor e = new HtEditor(s, l3);
 			HtVerifier v = new HtVerifier(e);
-			String s1 = s.getS();
-			String s2 = e.getS2();
-			String s3 = v.getS3();
-		    assertEquals(s3 , s2);
+			e.setChangeableIndex(s.getChangableIndex());
+			v.setChangeableIndex(e.getChangeableIndex());
+			String combine = s.combineInfos();
+			String signature = s.sign(combine);
+			String combine2 = v.combineInfos();
+			boolean b = s.getRsaSig().verify(combine2, signature, s.getPublicKey());
+		    assertEquals(true , b);
 		} 
 		catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -785,6 +797,283 @@ public class Jtest {
 			HtVerifier v = new HtVerifier(e);
 			List<String> l4 = v.getMsg();
 		    assertEquals(l4 , l3);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Diese Methode ueberprueft ob die Listen von Signer und Editor 
+	 * nach dem Hashing gleich sind
+	 */
+	@Test
+	public void TestChameleonEditor() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l3.add("aa");
+			l3.add("b");
+			l3.add("c");
+			l3.add("d");
+			Chameleon ch = new Chameleon();
+			ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+			cs.setListWithChamHash();
+			ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+			ce.setItemList(l);
+			ce.calcChangedIndex();
+			ce.setChRandom(cs.getChRandom());
+			ce.setItemList4(cs.getItemList3());
+			ce.setListWithNewRandom(ce.getChanges());
+			ce.setListWithChamHash();
+		    assertEquals(cs.getItemList3() , ce.getItemList5());
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Diese Methode verifiziert Nachrichten von Editor
+	 */
+	@Test
+	public void TestChameleonEditor2() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l3.add("aa");
+			l3.add("b");
+			l3.add("c");
+			l3.add("d");
+			Chameleon ch = new Chameleon();
+			ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+			cs.setListWithChamHash();
+			ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+			ce.setItemList(l);
+			ce.calcChangedIndex();
+			ce.setChRandom(cs.getChRandom());
+			ce.setItemList4(cs.getItemList3());
+			ce.setListWithNewRandom(ce.getChanges());
+			ce.setListWithChamHash();
+			String combine = cs.combineInfos();
+			String combine2 = ce.combineInfos();
+			String signature = cs.sign(combine);
+			boolean b = cs.getRsaSig().verify(combine2, signature, cs.getPublicKey());
+		    assertEquals(b , true);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Diese Methode verifiziert Nachrichten von Verifier
+	 */
+	@Test
+	public void TestChameleonVerifier() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l3.add("aa");
+			l3.add("b");
+			l3.add("c");
+			l3.add("d");
+			Chameleon ch = new Chameleon();
+			ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+			cs.setListWithChamHash();
+			ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+			ce.setItemList(l);
+			ce.calcChangedIndex();
+			ce.setChRandom(cs.getChRandom());
+			ce.setItemList4(cs.getItemList3());
+			ce.setListWithNewRandom(ce.getChanges());
+			ce.setListWithChamHash();
+			String combine = cs.combineInfos();
+			String signature = cs.sign(combine);
+			ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
+			cv.setChangeableIndex(ce.getChangeableIndex());
+			cv.setId(ce.getId());
+			cv.setChRandom(ce.getChRandom());
+			cv.addInfoToMsg();
+			cv.setListWithChamHash();
+			String combine2 = cv.combineInfos();
+			boolean b = cs.getRsaSig().verify(combine2, signature, cs.getPublicKey());
+		    assertEquals(b , true);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Diese Methode verifiziert Nachrichten von Verifier
+	 * sollte false ausgeben, da die stell geaendert ist,
+	 * die nicht geaendert werden kann
+	 */
+	@Test
+	public void TestChameleonVerifier2() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l3.add("aa");
+			l3.add("b");
+			l3.add("c");
+			l3.add("dd");
+			Chameleon ch = new Chameleon();
+			ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+			cs.setListWithChamHash();
+			ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+			ce.setItemList(l);
+			ce.calcChangedIndex();
+			ce.setChRandom(cs.getChRandom());
+			ce.setItemList4(cs.getItemList3());
+			ce.setListWithNewRandom(ce.getChanges());
+			ce.setListWithChamHash();
+			String combine = cs.combineInfos();
+			String signature = cs.sign(combine);
+			ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
+			cv.setChangeableIndex(ce.getChangeableIndex());
+			cv.setId(ce.getId());
+			cv.setChRandom(ce.getChRandom());
+			cv.addInfoToMsg();
+			cv.setListWithChamHash();
+			String combine2 = cv.combineInfos();
+			boolean b = cs.getRsaSig().verify(combine2, signature, cs.getPublicKey());
+		    assertEquals(b , false);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Diese Methode verifiziert Nachrichten von Verifier
+	 * sollte true ausgeben, da nichts geaendert ist
+	 */
+	@Test
+	public void TestChameleonVerifier3() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l3.add("a");
+			l3.add("b");
+			l3.add("c");
+			l3.add("d");
+			Chameleon ch = new Chameleon();
+			ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+			cs.setListWithChamHash();
+			ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+			ce.setItemList(l);
+			ce.calcChangedIndex();
+			ce.setChRandom(cs.getChRandom());
+			ce.setItemList4(cs.getItemList3());
+			ce.setListWithNewRandom(ce.getChanges());
+			ce.setListWithChamHash();
+			String combine = cs.combineInfos();
+			String signature = cs.sign(combine);
+			ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
+			cv.setChangeableIndex(ce.getChangeableIndex());
+			cv.setId(ce.getId());
+			cv.setChRandom(ce.getChRandom());
+			cv.addInfoToMsg();
+			cv.setListWithChamHash();
+			String combine2 = cv.combineInfos();
+			boolean b = cs.getRsaSig().verify(combine2, signature, cs.getPublicKey());
+		    assertEquals(b , true);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Diese Methode verifiziert Nachrichten von Verifier
+	 * alle aenderbare Daten sind geaendert, sollte true ausgeben
+	 */
+	@Test
+	public void TestChameleonVerifier4() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l3.add("ads");
+			l3.add("bdff");
+			l3.add("cssdfs");
+			l3.add("d");
+			Chameleon ch = new Chameleon();
+			ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+			cs.setListWithChamHash();
+			ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+			ce.setItemList(l);
+			ce.calcChangedIndex();
+			ce.setChRandom(cs.getChRandom());
+			ce.setItemList4(cs.getItemList3());
+			ce.setListWithNewRandom(ce.getChanges());
+			ce.setListWithChamHash();
+			String combine = cs.combineInfos();
+			String signature = cs.sign(combine);
+			ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
+			cv.setChangeableIndex(ce.getChangeableIndex());
+			cv.setId(ce.getId());
+			cv.setChRandom(ce.getChRandom());
+			cv.addInfoToMsg();
+			cv.setListWithChamHash();
+			String combine2 = cv.combineInfos();
+			boolean b = cs.getRsaSig().verify(combine2, signature, cs.getPublicKey());
+		    assertEquals(b , true);
 		} 
 		catch (Exception e) {
 			// TODO Auto-generated catch block

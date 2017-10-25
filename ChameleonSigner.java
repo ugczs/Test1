@@ -1,10 +1,14 @@
+import java.math.BigInteger;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ChameleonSigner {
-	private String s;
+	
 	/*Liste mit Nachrichtenteilen*/
 	private List<String> itemList;
 	/*Liste mit Nachrichtenteilen konkateniert mit indizies*/
@@ -19,14 +23,18 @@ public class ChameleonSigner {
 	private Chameleon chameleon;
 	/*Liste mit Chameleonrandonissen*/
 	private List<ChameleonRandomness> chRandom;
+	private RsaSig rsaSig;
+	private KeyPair pair;
 	
-	public ChameleonSigner(List<Integer> changeableIndex, List<String> itemList,  Chameleon chameleon) {
+	public ChameleonSigner(List<Integer> changeableIndex, List<String> itemList,  Chameleon chameleon) throws Exception {
 		calcID();
 		this.itemList = itemList;
 		this.changableIndex = changeableIndex;
 		this.chameleon = chameleon;
-		chRandom = new ArrayList<ChameleonRandomness>();
+		this.chRandom = new ArrayList<ChameleonRandomness>();
 		addIndexToMsg(itemList, changeableIndex);
+		this.rsaSig = new RsaSig();
+		this.pair = rsaSig.generateKeyPair();
 	}
 	
 	/**
@@ -123,12 +131,20 @@ public class ChameleonSigner {
 	
 	public String cocateAll() {
 		String s = "";
-		List<String> l = itemList2;
+		List<String> l = new ArrayList<String>(itemList3);
 		for(String i : l) {
 			s = s + i;
 		}
 		String s2 = id + s;
 		return s2;
+	}
+	
+	/**
+	 * Diese Methode verwandelt einen BigInteger zu String
+	 * @param foo ist ein BigInteger
+	 */
+	public String fromBigInteger(BigInteger foo) {
+	    return new String(foo.toString());
 	}
 
 	public List<String> getItemList() {
@@ -159,6 +175,27 @@ public class ChameleonSigner {
 		return itemList3;
 	}
 	
+	public String combineInfos() {
+		String s = this.id;
+		String size = Integer.toString(calcBlocks());
+		String s2 =  padLeftZeros(size, 5);
+		String s3 = fromBigInteger(chameleon.getY());
+		String s4 = cocateAll();
+		String s5 = s + s2 + s3 + s4;
+		return s5;
+	}
 	
+	public String sign(String text) throws Exception {
+		String signature = rsaSig.sign(text, pair.getPrivate());
+		return signature;
+	}
+	
+	public PublicKey getPublicKey(){
+		return this.pair.getPublic();
+	}
 
+	public RsaSig getRsaSig() {
+		return rsaSig;
+	}
+	
 }

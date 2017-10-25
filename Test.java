@@ -215,24 +215,13 @@ public class Test {
 		l2.add(0);
 		l2.add(1);
 		l2.add(2);
-		l3.add("aa");
+		l3.add("a");
 		l3.add("b");
-		l3.add("c");
-		l3.add("d");
+		l3.add("cc");
+		l3.add("de");
 		Chameleon ch = new Chameleon();
-		
-		String s= ch.calcChameleon("asdf");
-//		String ss = ch.calcChameleon("asdf", ch.getAlpha(), ch.getBeta());
-//		String s2 = ch.calcCollision("afassadf");
-		String s3 = ch.calcCollision2("asdf", ch.getAlpha(), ch.getBeta());
-		print(s);
-		
-		print(s3);
-		
-		
 		ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
 		cs.setListWithChamHash();
-		
 		ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
 		ce.setItemList(l);
 		ce.calcChangedIndex();
@@ -240,20 +229,18 @@ public class Test {
 		ce.setItemList4(cs.getItemList3());
 		ce.setListWithNewRandom(ce.getChanges());
 		ce.setListWithChamHash();
-		
-		print(ce.getItemList4());
-		print(ce.getItemList5());
-		
-		print(cs.getChRandom().get(0).getAlpha());
-		print(ce.getChRandom().get(0).getAlpha());
-		print(cs.getChRandom().get(1).getAlpha());
-		print(ce.getChRandom().get(1).getAlpha());
-		print(cs.getItemList());
-		print(ce.getItemList4());
-		print(ce.getItemList5());
-		
-		
-		
+		String combine = cs.combineInfos();
+		String combine2 = ce.combineInfos();
+		String signature = cs.sign(combine);
+		ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
+		cv.setChangeableIndex(ce.getChangeableIndex());
+		cv.setId(ce.getId());
+		cv.setChRandom(ce.getChRandom());
+		cv.addInfoToMsg();
+		cv.setListWithChamHash();
+		String combine3 = cv.combineInfos();
+		boolean b = cs.getRsaSig().verify(combine3, signature, cs.getPublicKey());
+		print(b);
 	}
 	
 	

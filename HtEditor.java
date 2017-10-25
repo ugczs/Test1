@@ -8,12 +8,13 @@ public class HtEditor {
 	private String s2;
 	private List<String> itemList2;
 	private List<Integer> changes;
+	private List<Integer> changeableIndex;
 	
 	public HtEditor(HtSigner htSigner, List<String> itemList2) {
 		this.htSigner = htSigner;
 		this.itemList2 = itemList2;
 		calcChangedIndex();
-		secSignature(itemList2, changes);
+		calcRootValue(itemList2, changes);
 	}
 	
 	public void calcChangedIndex() {
@@ -39,7 +40,7 @@ public class HtEditor {
 	}
 	
 	
-	public String secSignature(List<String> itemList, List<Integer> changes) {
+	public String calcRootValue(List<String> itemList, List<Integer> changes) {
 		try {
 			if(preCheck(this.changes, this.htSigner)) {
 				this.t2 = new HashTree(itemList, htSigner.getT().getSetList());
@@ -95,6 +96,45 @@ public class HtEditor {
 		return t2;
 	}
 	
+	public String combineInfos() {
+		String s = cocateAll();
+		String size = Integer.toString(calcBlocks());
+		String s2 =  padLeftZeros(size, 5);
+		String s3 = this.s2;
+		String s4 = s + s2 + s3;
+		return s4;
+	}
+	
+	public String cocateAll() {
+		String s = "";
+		List<Integer> l = new ArrayList<Integer>(this.changeableIndex);
+		for(int i : l) {
+			s = s + i;
+		}
+		return s;
+	}
+
+	public int calcBlocks() {
+		int i = itemList2.size();
+		return i;
+	}
+	
+	/**
+     * Füllt Links von String s mit 0
+     * Die max. Laenge betraegt i
+     */
+	public String padLeftZeros(String s, int i) {
+		String str = String.format("%1$" + i + "s", s).replace(' ', '0');
+		return str;
+	}
+
+	public List<Integer> getChangeableIndex() {
+		return changeableIndex;
+	}
+
+	public void setChangeableIndex(List<Integer> changeableIndex) {
+		this.changeableIndex = changeableIndex;
+	}
 	
 	
 

@@ -5,7 +5,6 @@ import java.util.List;
 
 public class ChameleonEditor {
 	private String id;
-	private String s2;
 	/*urspruengliche Nachrichten*/
 	private List<String> itemList;
 	/*motifizierte Nachrichten*/
@@ -45,11 +44,21 @@ public class ChameleonEditor {
 	 * alten Zufallszahlen mit neuen
 	 */
 	public void setListWithNewRandom(List<Integer> changes) {
-		for(int i = 0; i < changes.size(); i++) {
-			int index = changes.get(i);
-			ch.setChameleonHash(itemList4.get(index));
-			ch.calcCollision(itemList3.get(index));
-			chRandom.set(index , new ChameleonRandomness(ch.getAlpha2(), ch.getBeta2()));
+		try {
+			if(preCheck(this.changes, this.changeableIndex)) {
+				for(int i = 0; i < changes.size(); i++) {
+					int index = changes.get(i);
+					ch.setChameleonHash(itemList4.get(index));
+					ch.calcCollision(itemList3.get(index));
+					chRandom.set(index , new ChameleonRandomness(ch.getAlpha2(), ch.getBeta2()));
+				}
+			}
+			else {
+				System.err.println("Index not changeable!");
+			}
+		}
+		catch(Exception e) {
+			System.err.println("Index not changeable2!");
 		}
 	}
 	
@@ -158,8 +167,8 @@ public class ChameleonEditor {
 		int size = itemList2.size();
 		for(int i = 0; i < size; i++) {
 			notChangeable.add(i);
-		}
-		notChangeable.removeAll(l);
+			notChangeable.removeAll(l);
+			}
 		return notChangeable;
 	}
 
@@ -193,4 +202,51 @@ public class ChameleonEditor {
 	public List<String> getItemList5() {
 		return itemList5;
 	}
+	
+	public String combineInfos() {
+		String s = this.id;
+		String size = Integer.toString(calcBlocks());
+		String s2 =  padLeftZeros(size, 5);
+		String s3 = fromBigInteger(ch.getY());
+		String s4 = cocateAll();
+		String s5 = s + s2 + s3 + s4;
+		return s5;
+	}
+
+/**
+	 * Diese Methode verwandelt einen BigInteger zu String
+	 * @param foo ist ein BigInteger
+	 */
+	public String fromBigInteger(BigInteger foo) {
+	    return new String(foo.toString());
+	}
+
+	public String cocateAll() {
+		String s = "";
+		List<String> l = new ArrayList<String>(itemList5);
+		for(String i : l) {
+			s = s + i;
+		}
+		String s2 = id + s;
+		return s2;
+	}
+
+	public int calcBlocks() {
+		int i = itemList.size();
+		return i;
+	}
+	public String getId() {
+		return id;
+	}
+	
+	/**
+	 * Diese Methode ueberprueft, ob die zu aendernde Stellen aenderbar sind.
+	 */
+	public boolean preCheck(List<Integer> changes, List<Integer> changeable) {
+		if(!changeable.containsAll(changes)) {
+			return false;
+		}
+		return true;
+	}
+	
 }
