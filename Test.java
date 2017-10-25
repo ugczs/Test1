@@ -212,21 +212,48 @@ public class Test {
 		l.add("b");
 		l.add("c");
 		l.add("d");
-		l.add("jasdf");
 		l2.add(0);
 		l2.add(1);
-		l3.add("");
+		l2.add(2);
+		l3.add("aa");
 		l3.add("b");
 		l3.add("c");
 		l3.add("d");
+		Chameleon ch = new Chameleon();
 		
-		Chameleon c = new Chameleon("");
-		c.calcAlpha();
-		c.calcBeta();
-		c.calcE("ha");
-		c.chameleonHashing("ha", c.getAlpha(), c.getBeta());
-		print(c.getChameleonStringHash());
-
+		String s= ch.calcChameleon("asdf");
+//		String ss = ch.calcChameleon("asdf", ch.getAlpha(), ch.getBeta());
+//		String s2 = ch.calcCollision("afassadf");
+		String s3 = ch.calcCollision2("asdf", ch.getAlpha(), ch.getBeta());
+		print(s);
+		
+		print(s3);
+		
+		
+		ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+		cs.setListWithChamHash();
+		
+		ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+		ce.setItemList(l);
+		ce.calcChangedIndex();
+		ce.setChRandom(cs.getChRandom());
+		ce.setItemList4(cs.getItemList3());
+		ce.setListWithNewRandom(ce.getChanges());
+		ce.setListWithChamHash();
+		
+		print(ce.getItemList4());
+		print(ce.getItemList5());
+		
+		print(cs.getChRandom().get(0).getAlpha());
+		print(ce.getChRandom().get(0).getAlpha());
+		print(cs.getChRandom().get(1).getAlpha());
+		print(ce.getChRandom().get(1).getAlpha());
+		print(cs.getItemList());
+		print(ce.getItemList4());
+		print(ce.getItemList5());
+		
+		
+		
 	}
 	
 	
@@ -237,7 +264,7 @@ public class Test {
 			int index = changableIndex.get(i);
 			String s = Integer.toString(index);
 			String s1 = padLeftZeros(s, 5);
-			String s2 = itemList2.get(index) + s1;
+			String s2 = "hahaha"+ s1 + itemList2.get(index);
 			itemList2.set(index , s2);
 		}
 			List<Integer> l = changableIndex;
@@ -251,7 +278,7 @@ public class Test {
 				int index = notChanged.get(i);
 				String s = Integer.toString(index);
 				String s1 = padLeftZeros(s, 5);
-				String s2 = "hahaha"+ s1 + itemList2.get(index);
+				String s2 = itemList2.get(index) + s1;
 				itemList2.set(index , s2);
 			}
 	}

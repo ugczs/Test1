@@ -21,7 +21,7 @@ public class Chameleon {
 	private BigInteger e2;
 	private String chameleonHash;
 	
-	public Chameleon(String msg)  {
+	public Chameleon()  {
 		try {
 			calcQAndP();
 			calcX();
@@ -30,6 +30,72 @@ public class Chameleon {
 		catch(Exception e) {
 			System.err.println("Wrong algorithm");
 		}
+	}
+	/**
+	 * Diese Methode berechnet den String-Wert von Chameleonhash-Collision
+	 * mit der Eingabe msg
+	 */
+	public String calcCollision(String msg) {
+		try {
+			calcK2();
+			calcAlpha2();
+			calcE2(msg);
+			calcBeta2();
+			String s = fromBigInteger(check1());
+			return s;
+		}
+		catch(Exception e) {
+			System.err.println("Collion function error!");
+		}
+		return null;
+	}
+	
+	public String calcCollision2(String msg, BigInteger alpha2, BigInteger beta2) {
+		try {
+			String s = fromBigInteger(check11(msg, alpha2, beta2));
+			return s;
+		}
+		catch(Exception e) {
+			System.err.println("Collion function error!");
+		}
+		return null;
+	}
+	
+	public BigInteger check11(String msg, BigInteger alpha2, BigInteger beta2) throws NoSuchAlgorithmException {
+		BigInteger e = calcE2(msg, alpha2);
+		BigInteger g1 = BigInteger.valueOf(this.g);
+		BigInteger b = y.modPow(e, p).multiply(g1.modPow(beta2, p));
+		BigInteger b2 = b.mod(p);
+		BigInteger b3 = alpha2.subtract(b2).mod(q);
+		return b3;
+	}
+	
+	
+	
+	/**
+	 * Diese Methode berechnet den String-Wert von Chameleonhash
+	 * mit der Eingabe msg
+	 */
+	public String calcChameleon(String msg)  {
+		try {
+			calcAlpha();
+			calcBeta();
+			return chameleonHashing2(msg, alpha, beta);
+		}
+		catch(Exception e) {
+			System.err.println("Wrong algorithm 2");
+		}
+		return null;
+	}
+	
+	public String calcChameleon(String msg, BigInteger alpha, BigInteger beta)  {
+		try {
+			return chameleonHashing2(msg, alpha, beta);
+		}
+		catch(Exception e) {
+			System.err.println("Wrong algorithm 2");
+		}
+		return null;
 	}
 	
 	
@@ -101,6 +167,17 @@ public class Chameleon {
 	}
 	
 	/**
+	 * Diese Methode berechnet e mit einem festem Zufall
+	 * e hat eine feste Laenge von Typ BigInteger
+	 * @return 
+	 * 
+	 */
+	public BigInteger calcE2(String msg, BigInteger alpha2) throws NoSuchAlgorithmException {
+		BigInteger ee = hashMsgToFixedLength(msg, alpha2);
+		return ee;
+	}
+	
+	/**
 	 * Diese Methode berechnet e2
 	 * e2 hat eine feste Laenge von Typ BigInteger
 	 */
@@ -113,8 +190,21 @@ public class Chameleon {
 	 * @param msg ist die Nachricht
 	 * @param alpha ist eine zufaellige Zahl in [0,q]
 	 * @param beta ist eine zufaellige Zahl in [0,q]
+	 * @throws NoSuchAlgorithmException 
 	 */
 	public String chameleonHashing(String msg, BigInteger alpha, BigInteger beta) {
+		BigInteger b1;
+		BigInteger g1 = BigInteger.valueOf(this.g);
+		BigInteger b2 = y.modPow (e, p);
+		BigInteger b3 = g1.modPow(beta, p);
+		BigInteger b4 = (b2.multiply(b3).mod(p));
+		b1 = alpha.subtract(b4).mod(q);
+		this.chameleonHash = fromBigInteger(b1);
+		return chameleonHash;
+	}
+	
+	public String chameleonHashing2(String msg, BigInteger alpha, BigInteger beta) throws NoSuchAlgorithmException {
+		BigInteger e = calcE2(msg, alpha);
 		BigInteger b1;
 		BigInteger g1 = BigInteger.valueOf(this.g);
 		BigInteger b2 = y.modPow (e, p);
@@ -282,6 +372,10 @@ public class Chameleon {
 
 	public BigInteger getBeta2() {
 		return beta2;
+	}
+	
+	public void setChameleonHash(String chameleonHash) {
+		this.chameleonHash = chameleonHash;
 	}
 	
 	

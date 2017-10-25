@@ -722,8 +722,8 @@ public class Jtest {
 			l3.add("bb");
 			l3.add("c");
 			l3.add("d");
-			Signer s = new Signer(l2, l);
-			Editor e = new Editor(s, l3);
+			HtSigner s = new HtSigner(l2, l);
+			HtEditor e = new HtEditor(s, l3);
 			String s1 = s.getS();
 			String s2 = e.getS2();
 		    assertEquals(s1 , s2);
@@ -750,9 +750,9 @@ public class Jtest {
 			l3.add("bb");
 			l3.add("c");
 			l3.add("d");
-			Signer s = new Signer(l2, l);
-			Editor e = new Editor(s, l3);
-			Verifier v = new Verifier(e);
+			HtSigner s = new HtSigner(l2, l);
+			HtEditor e = new HtEditor(s, l3);
+			HtVerifier v = new HtVerifier(e);
 			String s1 = s.getS();
 			String s2 = e.getS2();
 			String s3 = v.getS3();
@@ -780,9 +780,9 @@ public class Jtest {
 			l3.add("b");
 			l3.add("c");
 			l3.add("d");
-			Signer s = new Signer(l2, l);
-			Editor e = new Editor(s, l3);
-			Verifier v = new Verifier(e);
+			HtSigner s = new HtSigner(l2, l);
+			HtEditor e = new HtEditor(s, l3);
+			HtVerifier v = new HtVerifier(e);
 			List<String> l4 = v.getMsg();
 		    assertEquals(l4 , l3);
 		} 
