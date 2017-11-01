@@ -2,7 +2,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Berechnung von HashTreeRoot
@@ -11,13 +13,17 @@ import java.util.List;
 public class HashTree {
 	private Node root;
     private List<String> itemList;
-    private List<Node> nodeList = new ArrayList<Node>();
-    private List<CommitmentSet> setList = new ArrayList<CommitmentSet>();
+    private List<Node> nodeList;
+    private List<CommitmentSet> setList;
     
     public HashTree(List<String> itemList) throws Exception {
     	this.itemList = itemList;
+    	this.nodeList = new ArrayList<Node>();
+    	this.setList = new ArrayList<CommitmentSet>();
     	calcNodeList();
     	calcHashTree();
+    	setRootIndex();
+    	setSubTreeIndex(this.root);
     }
     
     /**
@@ -25,9 +31,83 @@ public class HashTree {
      */
     public HashTree(List<String> itemList, List<CommitmentSet> setList) throws Exception {
     	this.setList = setList;
+    	this.nodeList = new ArrayList<Node>();
     	this.itemList = itemList;
     	calcNodeList2();
     	calcHashTree();
+    	setRootIndex();
+    	setSubTreeIndex(this.root);
+    }
+    
+    public void setRootIndex() {
+    	List<Byte> l = new ArrayList<Byte>();
+    	l.add((byte)0);
+    	this.root.setIndex(l);
+    }
+    
+    public void setSubTreeIndex(Node n) {
+    	if(n.hasLeft()) {
+    		n.setLeftIndex();
+    		setSubTreeIndex(n.getLeft());
+    	}
+    	if(n.hasRight()) {
+    		n.setRightIndex();
+    		setSubTreeIndex(n.getRight());
+    	}
+    }
+    
+    /**
+     * Sucht einen Knoten anhand von Index, ersetzt dessen Wert und 
+     * loeschen seine Kinder
+     * @param index Nummer von Knoten
+     * @param newNode der Neue Knoten
+     * @param startNode Startknoten
+     */
+    public void replaceNode(List<Byte> index, Node newNode, Node startNode) {
+    	Node n = searchNode(index, startNode);
+    	n.setValue(newNode.getValue());
+    	n.setMarked(newNode.isMarked());
+    	n.clearChildren();
+    }
+    
+    /**
+     * Diese Methode ersetzt die alten Knoten mit den neuen Knoten von
+     * reqNodes mit den gleichen Indizies.
+     * @param reqNodes neue Knotenliste
+     */
+    public void replaceWithNewNodes(List<Node> reqNodes) {
+    	try{
+    		for(int i = 0; i < reqNodes.size(); i++) {
+        		replaceNode(reqNodes.get(i).getIndex(), reqNodes.get(i), this.root);
+        	}
+    	}
+    	catch(Exception e) {
+    		System.err.println("Cant replace the Node!");
+    	}
+    }
+    
+    
+    /**
+     * Sucht einen Knoten anhand von Index
+     * @param index Nummer von Knoten
+     * @param node Startknoten
+     */
+    public Node searchNode(List<Byte> index, Node node){
+        if(node != null){
+            if(node.getIndex().equals(index)){
+            	return node;
+            } 
+            else {
+                Node foundNode = searchNode(index, node.getLeft());
+                if(foundNode == null) {
+                    foundNode = searchNode(index, node.getRight());
+                }
+                return foundNode;
+             }
+        } 
+        else {
+            return null;
+        }
     }
     
     public List<Node> getNodeList() {
@@ -61,7 +141,7 @@ public class HashTree {
      */
     public String commit(String value) {
     	ToeplitzCommitment tc = new ToeplitzCommitment(value);
-    	String commitment = tc.getZ();
+    	String commitment = tc.getCommitmentValue();
     	int[] row = tc.getRow();
     	int[] column = tc.getColumn();
     	int[][] randomVektor = tc.getRandomVektor();
@@ -69,12 +149,16 @@ public class HashTree {
 		return commitment;	
     }
     
+    /**
+     * Berechnet Commitment von einem String
+     * verwendet Commitmentset von voher
+     */
     public String commit2(String value, CommitmentSet set) {
     	int[] row = set.getRow();
     	int[] column = set.getColumn();
     	int[][] randomVektor = set.getRandomVektor();
     	ToeplitzCommitment tc = new ToeplitzCommitment(value, row, column, randomVektor);
-    	String commitment = tc.getZ();
+    	String commitment = tc.getCommitmentValue();
     	this.setList.add(new CommitmentSet(row, column, randomVektor));
 		return commitment;	
     }
@@ -151,4 +235,115 @@ public class HashTree {
 		this.nodeList = nodeList;
 	}
 	
+	/**
+     * markiert geaenderte Blaetterknoten
+     */
+	public void markNodes(List<Integer> changeableIndex) {
+		for(int i = 0; i < changeableIndex.size(); i++) {
+			int index = changeableIndex.get(i);
+			this.getNodeList().get(index).setMarked(true);
+		}
+	}
+	
+	/**
+     * markiert einen Elternknoten, wenn beide Kinder geaendert sind
+     */
+	public void markParent(Node n) {
+		if(n.getParentNode().getLeft().isMarked() && n.getParentNode().getRight().isMarked() 
+				&& n.getParentNode() != null ) {
+			n.getParentNode().setMarked(true);
+			n.getParentNode().getLeft().setMarked(false);
+			n.getParentNode().getRight().setMarked(false);
+		}
+	}
+	
+	/**
+	 * @param currentNodeList aktuelle Knotenliste
+     *@param reqNodes nimmt alle zur Rekonstruktion des Baums 
+     *benoetigte Knoten von currentNodeList auf
+     */
+	public void addReqNodes(List<Node> currentNodeList, List<Node> reqNodes) {
+		for(Node n: currentNodeList) {
+			if(n.isMarked()) {
+				markParent(n);
+			}
+		}
+		for(Node n: currentNodeList) {
+			if(n.isMarked()) {
+				reqNodes.add(n);
+			}
+		}
+	}
+	
+	public List<Node> getParentNodeList(List<Node> childrenList) {
+		List<Node> parentList = new ArrayList<Node>();
+		for(Node n: childrenList) {
+			parentList.add(n.getParentNode());
+		}
+		Set<Node> hs = new LinkedHashSet<>();
+		hs.addAll(parentList);
+		parentList.clear();
+		parentList.addAll(hs);
+		return parentList;	
+	}
+	
+	/**
+     * Diese Methode gibt die benoetige Knoten für
+     * die Rekonstruktion des Baums zurueck
+     */
+	public List<Node> getReqNodes(List<Integer> changeableIndex) {
+		List<Node> reqNodeList = new ArrayList<Node>();
+		if(changeableIndex.size() == 0) {
+			return this.nodeList;
+		}
+		else {
+			markNodes(changeableIndex);
+			addReqNodes(this.getNodeList(), reqNodeList);
+			List<Node> p = getParentNodeList(this.getNodeList());
+			while(p.size() > 1) {
+				addReqNodes(p, reqNodeList);
+				p = getParentNodeList(p);
+			}
+			if(p.get(0).isMarked()) {
+				reqNodeList.add(p.get(0));
+			}
+			else {
+				return reqNodeList;
+			}
+			return reqNodeList;
+		}
+	}
+	
+	public String calcRootWithNewNodes() {
+		String s = null;
+		if(root.isMarked()) {
+			s = root.getValue();
+			return s;
+		}
+		return s;
+	}
+	
+
+	
+	public void calcNewParentValue(Node n) throws NoSuchAlgorithmException {
+		if(n.hasLeft() && n.hasRight() && !n.getLeft().hasChildren() && !n.getRight().hasChildren()) {
+			n.setValue(calcHash(n.getLeft().getValue() + n.getRight().getValue()));
+			n.clearChildren();
+		}
+		else if(n.hasLeft() && n.hasRight() && n.getLeft().hasChildren() && !n.getRight().hasChildren()) {
+			calcNewParentValue(n.getLeft());
+		}
+		else if(n.hasLeft() && n.hasRight() && !n.getLeft().hasChildren() && n.getRight().hasChildren()) {
+			calcNewParentValue(n.getRight());
+		}
+		else if(n.hasLeft() && n.hasRight() && n.getLeft().hasChildren() && n.getRight().hasChildren()) {
+			calcNewParentValue(n.getLeft());
+		}
+	}
+	
+	public void calcNewRootValue(Node n) throws NoSuchAlgorithmException {
+		while(n.hasChildren()) {
+			calcNewParentValue(n);
+		}
+	}
   }

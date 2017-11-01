@@ -13,7 +13,7 @@ public class HtSigner {
 	private RsaSig rsaSig;
 	private KeyPair pair;
 	
-	public HtSigner(List<Integer> changableIndex, List<String> itemList) throws Exception {
+	public HtSigner(List<String> itemList, List<Integer> changableIndex) throws Exception {
 		this.itemList = itemList;
 		this.changableIndex = changableIndex;
 		calcRootValue(itemList);
@@ -115,5 +115,8 @@ public class HtSigner {
 		return str;
 	}
 	
+	public List<CommitmentSet> getSetList() {
+		return this.t.getSetList();
+	}
 
 }

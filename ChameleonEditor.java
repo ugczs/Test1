@@ -31,7 +31,7 @@ public class ChameleonEditor {
 	 * Berechnet Chameleon Hashes auf Liste 3
 	 */
 	public void setListWithChamHash() {
-		itemList5 = new ArrayList(itemList3);
+		itemList5 = new ArrayList<String>(itemList3);
 		for(int i = 0; i < changeableIndex.size(); i++) {
 			int index = changeableIndex.get(i);
 			itemList5.set(index , ch.calcCollision2(itemList3.get(index), chRandom.get(i).getAlpha(),
@@ -74,7 +74,7 @@ public class ChameleonEditor {
 	 * Berechnet neue Hash-Liste mit festen Zahlen als Zufall
 	 */
 	public List<String> calcNewHashList() {
-		List<String> l = new ArrayList(itemList3);
+		List<String> l = new ArrayList<String>(itemList3);
 		for(int i = 0; i < changeableIndex.size(); i++) {
 			int index = changeableIndex.get(i);
 			l.set(index, calcChameleonWithFixedRandom(l.get(index), chRandom.get(i).getAlpha(), chRandom.get(i).getBeta()));
@@ -83,7 +83,7 @@ public class ChameleonEditor {
 	}
 	
 	public void addIndexToMsg(List<String> itemList2, List<Integer> changeableIndex) {
-		this.itemList3 = new ArrayList(itemList2);
+		this.itemList3 = new ArrayList<String>(itemList2);
 		for(int i = 0; i < changeableIndex.size(); i++) {
 			int index = changeableIndex.get(i);
 			String s = Integer.toString(index);
@@ -134,7 +134,7 @@ public class ChameleonEditor {
 	}
 
 	public void setChRandom(List<ChameleonRandomness> chRandom) {
-		this.chRandom = new ArrayList(chRandom);
+		this.chRandom = new ArrayList<ChameleonRandomness>(chRandom);
 	}
 	
 	public void setId(String id) {
@@ -155,14 +155,14 @@ public class ChameleonEditor {
 	}
 	
 	public void setItemList(List<String> itemList) {
-		this.itemList = new ArrayList(itemList);
+		this.itemList = new ArrayList<String>(itemList);
 	}
 	
 	/**
 	 * Diese Methode berechnet Indizies, die nicht geaendert werden können
 	 */
 	public List<Integer> calcNotChangeable() {
-		List<Integer> l = new ArrayList(changeableIndex);
+		List<Integer> l = new ArrayList<Integer>(changeableIndex);
 		List<Integer> notChangeable = new ArrayList<Integer>();
 		int size = itemList2.size();
 		for(int i = 0; i < size; i++) {
@@ -173,7 +173,7 @@ public class ChameleonEditor {
 	}
 
 	public void setItemList4(List<String> itemList4) {
-		this.itemList4 = new ArrayList(itemList4);
+		this.itemList4 = new ArrayList<String>(itemList4);
 	}
 
 	public List<Integer> getChanges() {

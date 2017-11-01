@@ -14,6 +14,59 @@ import java.util.List;
 public class Test {
 
 	public static void main(String[] args) throws Exception {
+		List<String> l = new ArrayList<String>();
+		List<Integer> l2 = new ArrayList<Integer>();
+		List<String> l3 = new ArrayList<String>();
+		l.add("a");
+		l.add("b");
+		l.add("a");
+		l.add("b");
+		l.add("a");
+		l.add("b");
+		l.add("a");
+		l.add("b");
+		l2.add(0);	
+		l2.add(1);
+		l2.add(2);	
+		l2.add(3);
+		l2.add(4);	
+		l2.add(5);
+		l2.add(6);	
+		
+		l3.add("a");
+		l3.add("b");
+		l3.add("a");
+		l3.add("ba");
+		l3.add("a");
+		l3.add("k");
+		l3.add("a");
+		l3.add("b");
+		
+	
+		
+		
+		HtSigner ts = new HtSigner(l, l2);
+		HtEditor te = new HtEditor(l, l3, l2, ts.getSetList());
+		HashTree t2 = new HashTree(l3, ts.getSetList());
+		t2.replaceWithNewNodes(te.getReqNodesList());
+		
+		print(t2.getRoot().getValue());
+		print(te.getT().getRoot().getValue());
+		
+		t2.calcNewRootValue(t2.getRoot());
+		print(t2.getRoot().getValue());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 //		// Eine Email wird eingelesen
 //		//MailReader mr = new MailReader("C:/Users/yu/Desktop/testmail.txt");
 //		//MailReader mr = new MailReader("C:/Users/yu/Desktop/email test/test1.eml");
@@ -71,14 +124,7 @@ public class Test {
 //		HashTree t = new HashTree(l);
 //		String s = t.getRoot().getValue();
 //		System.out.println(s);
-		
-		ToeplitzMatrix a = new ToeplitzMatrix(8,10);
-		for (int i = 0; i < a.getRowLength(); i++) {
-		    for (int j = 0; j < a.getColumnLength(); j++) {
-		        System.out.print(a.getToeplitzMatrix()[i][j]+ " ");
-		 }
-		    System.out.println();
-		}
+
 		
 //		ToeplitzCommitment tc = new ToeplitzCommitment("asdfsdfdf");
 //		int[][] v = tc.getRandomVektor();
@@ -158,7 +204,7 @@ public class Test {
 //	    String s7 = calcHash("1");
 //	    String s8 = calcHash(s7);
 //	    System.out.println(s8);
-		printMatrix(b1);
+//		printMatrix(b1);
 		
 //		List<String> l = new ArrayList<String>();
 //		l.add("a");
@@ -204,43 +250,47 @@ public class Test {
 //		addIndex(l);
 //		print(l);
 		
-		List<String> l = new ArrayList<String>();
-		List<Integer> l2 = new ArrayList<Integer>();
-		List<String> l3 = new ArrayList<String>();
-		List<String> l4 = new ArrayList<String>();
-		l.add("a");
-		l.add("b");
-		l.add("c");
-		l.add("d");
-		l2.add(0);
-		l2.add(1);
-		l2.add(2);
-		l3.add("a");
-		l3.add("b");
-		l3.add("cc");
-		l3.add("de");
-		Chameleon ch = new Chameleon();
-		ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
-		cs.setListWithChamHash();
-		ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
-		ce.setItemList(l);
-		ce.calcChangedIndex();
-		ce.setChRandom(cs.getChRandom());
-		ce.setItemList4(cs.getItemList3());
-		ce.setListWithNewRandom(ce.getChanges());
-		ce.setListWithChamHash();
-		String combine = cs.combineInfos();
-		String combine2 = ce.combineInfos();
-		String signature = cs.sign(combine);
-		ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
-		cv.setChangeableIndex(ce.getChangeableIndex());
-		cv.setId(ce.getId());
-		cv.setChRandom(ce.getChRandom());
-		cv.addInfoToMsg();
-		cv.setListWithChamHash();
-		String combine3 = cv.combineInfos();
-		boolean b = cs.getRsaSig().verify(combine3, signature, cs.getPublicKey());
-		print(b);
+//		List<String> l = new ArrayList<String>();
+//		List<Integer> l2 = new ArrayList<Integer>();
+//		List<String> l3 = new ArrayList<String>();
+//		List<String> l4 = new ArrayList<String>();
+//		l.add("a");
+//		l.add("b");
+//		l.add("c");
+//		l.add("d");
+//		l2.add(0);
+//		l2.add(1);
+//		l2.add(2);
+//		l3.add("a");
+//		l3.add("b");
+//		l3.add("cc");
+//		l3.add("de");
+//		Chameleon ch = new Chameleon();
+//		ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+//		cs.setListWithChamHash();
+//		ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+//		ce.setItemList(l);
+//		ce.calcChangedIndex();
+//		ce.setChRandom(cs.getChRandom());
+//		ce.setItemList4(cs.getItemList3());
+//		ce.setListWithNewRandom(ce.getChanges());
+//		ce.setListWithChamHash();
+//		String combine = cs.combineInfos();
+//		String combine2 = ce.combineInfos();
+//		String signature = cs.sign(combine);
+//		ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
+//		cv.setChangeableIndex(ce.getChangeableIndex());
+//		cv.setId(ce.getId());
+//		cv.setChRandom(ce.getChRandom());
+//		cv.addInfoToMsg();
+//		cv.setListWithChamHash();
+//		String combine3 = cv.combineInfos();
+//		boolean b = cs.getRsaSig().verify(combine3, signature, cs.getPublicKey());
+//		print(b);
+		
+//		ToeplitzCommitment tc = new ToeplitzCommitment("hi");
+//		print(tc.getCommitmentValue());
+		
 	}
 	
 	

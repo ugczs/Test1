@@ -559,6 +559,92 @@ public class Jtest {
 	}
 	
 	@Test
+	public void TestHashTreeGetReqNodes1() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l2.add(3);
+			l2.add(4);
+			l2.add(5);
+			l2.add(6);
+			l2.add(7);
+			HashTree t = new HashTree(l);
+			List<Node> n = t.getReqNodes(l2);
+		    assertEquals(t.getRoot(), n.get(0));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestHashTreeGetReqNodes2() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l2.add(1);
+			l2.add(2);
+			l2.add(3);
+			l2.add(4);
+			l2.add(5);
+			l2.add(6);
+			l2.add(7);
+			HashTree t = new HashTree(l);
+			List<Node> n = t.getReqNodes(l2);
+		    assertEquals(3, n.size());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void TestHashTreeGetReqNodes3() {
+		try {
+			List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l.add("a");
+			l.add("b");
+			l2.add(1);
+			l2.add(2);
+			l2.add(3);
+			HashTree t = new HashTree(l);
+			List<Node> n = t.getReqNodes(l2);
+			boolean b;
+			b = n.get(0).getIndex().equals(t.getRoot().getLeft().getLeft().getRight().getIndex());
+		    assertEquals(b, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
 	public void TestHashTree1() {
 		try {
 			List<String> l = new ArrayList<String>();
@@ -653,32 +739,7 @@ public class Jtest {
 		}
 	}
 	
-	@Test
-	public void TestHashTree5() {
-		try {
-			List<String> l = new ArrayList<String>();
-			List<Integer> l2 = new ArrayList<Integer>();
-			List<String> l3 = new ArrayList<String>();
-			l.add("aa");
-			l.add("bb");
-			l.add("cc");
-			l.add("d");
-			l2.add(0);
-			l2.add(1);
-			l3.add("a");
-			l3.add("b");
-			l3.add("c");
-			l3.add("d");
-			SignatureCheck s = new SignatureCheck(l2, l, l3);
-			s.firstSignature(l);
-			s.secSignature(l3, l2);
-			boolean b = s.check();
-		    assertEquals(false , b);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	
 	@Test
 	public void TestHashTree6() {

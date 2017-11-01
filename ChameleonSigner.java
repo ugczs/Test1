@@ -1,5 +1,4 @@
 import java.math.BigInteger;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -58,7 +57,7 @@ public class ChameleonSigner {
 	 * Diese Methode berechnet Indizies, die nicht geaendert werden können
 	 */
 	public List<Integer> calcNotChanged() {
-		List<Integer> l = new ArrayList(changableIndex);
+		List<Integer> l = new ArrayList<Integer>(changableIndex);
 		List<Integer> notChanged = new ArrayList<Integer>();
 		int size = itemList.size();
 		for(int i = 0; i < size; i++) {
@@ -74,7 +73,7 @@ public class ChameleonSigner {
 	 * Fuer aenderbare Elemente konkateniert diese Methode id + Index am Kopf 
 	 */
 	public void addIndexToMsg(List<String> itemList, List<Integer> changableIndex) {
-		this.itemList2 = new ArrayList(itemList);
+		this.itemList2 = new ArrayList<String>(itemList);
 		for(int i = 0; i < changableIndex.size(); i++) {
 			int index = changableIndex.get(i);
 			String s = Integer.toString(index);

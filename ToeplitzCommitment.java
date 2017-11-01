@@ -16,7 +16,6 @@ public class ToeplitzCommitment {
 	private int[][] randomVektor;
 	private int[][]	b;
 	private int[][]	x;
-	private int[][]	y;
 	private String	z;
 	private BitwiseCalculation bc = new BitwiseCalculation();
 
@@ -29,9 +28,8 @@ public class ToeplitzCommitment {
 			this.tm = new ToeplitzMatrix(rowLength, columnLength);
 			this.toeplitzMatrix = tm.getToeplitzMatrix();
 			generateRandomVektor(columnLength);
-			calcB();
 			calcX();
-			hashWithMatrix(this.x);
+			calcB();
 			calcZ();
 		}
 		catch(Exception ex) {
@@ -46,13 +44,11 @@ public class ToeplitzCommitment {
 			calcBitStringMsg(message);
 			this.tm = new ToeplitzMatrix(row, column);
 			this.toeplitzMatrix = tm.getToeplitzMatrix();
-			calcB();
 			calcX();
-			hashWithMatrix(this.x);
+			calcB();
 			calcZ();
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Can not generate toeplitz commitment with given matrix");
 		}
 	}
 	
@@ -217,9 +213,8 @@ public class ToeplitzCommitment {
 	}
 	
 	public void calcB() {
-		int[][] m = bitStringToIntArray(bitStringMsg);
 		int[][] temp = bc.multiplyMatrix(toeplitzMatrix, randomVektor);
-		int[][] b =  bc.substractVektor(m, temp);
+		int[][] b =  bc.substractVektor(this.x, temp);
 		this.b = b;
 	}
 	
@@ -236,30 +231,20 @@ public class ToeplitzCommitment {
 		this.bit = bit;
 	}
 	
-	/**
-	 * Diese Methode berechnet einen Hash mit der Funktion
-	 * f(x) = Ax + b = y
-	 * @return y ist der Hashwert
-	 */
-	public void hashWithMatrix(int[][] x) {
-		int[][] temp = bc.multiplyMatrix(toeplitzMatrix, x);
-		int[][] y = bc.addVektor(temp, b);
-		this.y = y;
-	}
+	
 	
 	/**
-	 * Diese Methode berechnet einen MD5-Hash mit Eingabe y
-	 * Ergebnis wird dann in z gespeichert.(Commitment)
+	 * Diese Methode berechnet einen Hash z mit dem Random-Vektor
+	 * z ist Teil von Commitment-Wert
 	 */
 	public void calcZ() {
-		String s = intArrayToBitString(y);
+		String s = intArrayToBitString(this.randomVektor);
 		try {
 			String s2 = calcHash(s);
 			String s3 = padLeftZeros(s2, bit);
 			this.z = s3;
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Wrong z value!");
 		}
 	}
 	
@@ -302,12 +287,6 @@ public class ToeplitzCommitment {
 		    System.out.println();
 		}
 	}
-	
-	public String revealInfo() {
-		return "z is" + this.z + "ToeplitzRow is" + arrayToString(tm.getRow()) + 
-				"ToeplitzColumn is" + arrayToString(tm.getColumn()) +
-				"b is" + matrixToString(this.b);
-	}
 
 	public int[][] getToeplitzMatrix() {
 		return toeplitzMatrix;
@@ -335,6 +314,21 @@ public class ToeplitzCommitment {
 			this.column[i] = toeplitzMatrix[i][0];
 		}
 		return column;
+	}
+	
+	/**
+	 * Diese Methode gibt den Commitment-Wert zurueck,
+	 * diese besteht aus z-Wert, b-Wert, Zeilen- und
+	 * Spaltenwert aus Toeplitz-Matrix. #Zeichen dient
+	 * zur Trennung
+	 * @return Commitment-wert
+	 */
+	public String getCommitmentValue() {
+		String b = matrixToString(this.b);
+		String row = arrayToString(getRow());
+		String column = arrayToString(getColumn());
+		String s3 = this.z + "#" + b + "#" + row + "#" + column;
+		return s3;
 	}
 	
 }

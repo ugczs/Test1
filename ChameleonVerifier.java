@@ -24,7 +24,7 @@ public class ChameleonVerifier {
 	 * Berechnet Chameleon Hashes auf Liste mit Indizies
 	 */
 	public void setListWithChamHash() {
-		itemList3 = new ArrayList(itemList2);
+		itemList3 = new ArrayList<String>(itemList2);
 		for(int i = 0; i < changeableIndex.size(); i++) {
 			int index = changeableIndex.get(i);
 			itemList3.set(index , ch.calcCollision2(itemList2.get(index), chRandom.get(i).getAlpha(),
@@ -33,7 +33,7 @@ public class ChameleonVerifier {
 	}
 	
 	public void addInfoToMsg() {
-		itemList2 = new ArrayList(itemList);
+		itemList2 = new ArrayList<String>(itemList);
 		for(int i = 0; i < changeableIndex.size(); i++) {
 			int index = changeableIndex.get(i);
 			String s = Integer.toString(index);
@@ -96,7 +96,7 @@ public class ChameleonVerifier {
 	 * Diese Methode berechnet Indizies, die nicht geaendert werden können
 	 */
 	public List<Integer> calcNotChangeable() {
-		List<Integer> l = new ArrayList(changeableIndex);
+		List<Integer> l = new ArrayList<Integer>(changeableIndex);
 		List<Integer> notChangeable = new ArrayList<Integer>();
 		int size = itemList.size();
 		for(int i = 0; i < size; i++) {
