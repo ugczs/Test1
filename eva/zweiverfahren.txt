@@ -1,0 +1,64 @@
+Hash Tree
+
+List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l.add("e");
+			l.add("f");
+			l.add("g");
+			l2.add(0);	
+			l2.add(1);
+			l2.add(2);	
+			l2.add(3);
+			l2.add(4);	
+			l3.add("aa");
+			l3.add("bb");
+			l3.add("cc");
+			l3.add("dd");
+			l3.add("eeeee");
+			l3.add("f");
+			l3.add("g");
+			HtSigner ts = new HtSigner(l, l2);
+			HtEditor te = new HtEditor(l, l3, l2, ts.getSetList());
+			HtVerifier tv = new HtVerifier(te.sendMsg(), te.getSetList(), te.getReqNodesList());
+			tv.setChangeableIndex(te.getChangeableIndex());
+			String combine = ts.combineInfos();
+			String signature = ts.sign(combine);
+			String combine2 = tv.combineInfos();
+			boolean b = ts.getRsaSig().verify(combine2, signature, ts.getPublicKey());
+		    assertEquals(true , b);
+
+
+Chameleon
+
+List<String> l = new ArrayList<String>();
+			List<Integer> l2 = new ArrayList<Integer>();
+			List<String> l3 = new ArrayList<String>();
+			l.add("a");
+			l.add("b");
+			l.add("c");
+			l.add("d");
+			l2.add(0);
+			l2.add(1);
+			l2.add(2);
+			l3.add("ads");
+			l3.add("bdff");
+			l3.add("cssdfs");
+			l3.add("d");
+			Chameleon ch = new Chameleon();
+			ChameleonSigner cs = new ChameleonSigner(l2, l, ch);
+			cs.setListWithChamHash();
+			ChameleonEditor ce = new ChameleonEditor(l2, l3, ch, cs.getId());
+			ce.setItemList(l);
+			ce.calcHashWithInfoFromSigner(cs);
+			String combine = cs.combineInfos();
+			String signature = cs.sign(combine);
+			ChameleonVerifier cv = new ChameleonVerifier(ce.getItemList2(), ch);
+			cv.calcHashWithInfoFromEditor(ce);
+			String combine2 = cv.combineInfos();
+			boolean b = cs.getRsaSig().verify(combine2, signature, cs.getPublicKey());
+		    assertEquals(b , true);

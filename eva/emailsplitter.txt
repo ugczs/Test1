@@ -1,0 +1,7 @@
+List<String> l = new ArrayList<String>();
+		MailReader mr = new MailReader("test4.txt");
+		MailParser mp = new MailParser(mr);
+		mp.splitMail(mr);
+		mp.setHeader();
+		mp.setBody();
+		l = mp.getBody().getBodyList();

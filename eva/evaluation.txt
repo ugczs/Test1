@@ -1,0 +1,17 @@
+Zeit zum Aufbau der zu signierenden Nachricht (Chameleon vs Hash Tree)
+1 Mit wenigen Nachrichtenblöcken
+  - mit kurzer Nachricht je Block
+	- mit wenigen änderbaren Stellen
+	- mit vielen änderbaren Stellen
+  - mit langer Nachricht je Block
+	- mit wenigen änderbaren Stellen
+	- mit vielen änderbaren Stellen
+2 Mit vielen Nachrichtenblöcken
+  - mit kurzer Nachricht je Block
+	- mit wenigen änderbaren Stellen
+	- mit vielen änderbaren Stellen
+  - mit langer Nachricht je Block
+	- mit wenigen änderbaren Stellen
+	- mit vielen änderbaren Stellen
+
+bei HT-Verfahren ist insbesondere die Anzahl von tatsächlich geänderten Stellen zu beachten.
